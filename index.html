@@ -147,6 +147,75 @@
     border-radius: 999px; cursor: pointer; font-size: 12px; font-weight: 600; }
   .filter-btn.active { background: var(--panel-2); color: var(--text); border-color: var(--accent); }
   .reset-link { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 12px; text-decoration: underline; }
+
+  /* Train hub + shared mode UI */
+  .mode-card .meta { margin-top: 12px; }
+  .stage-head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+  .stage-head h2 { margin: 0; font-size: 20px; }
+  .stage-head .desc { color: var(--muted); font-size: 13px; }
+  .back-btn { background: var(--panel); border: 1px solid var(--border); color: var(--text); padding: 7px 14px;
+    border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; }
+  .back-btn:hover { border-color: var(--accent); }
+  .stage { max-width: 820px; }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+  .mono-block { white-space: pre; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 13px; line-height: 1.6; }
+  .blankin { background: var(--code-bg); border: 1px solid var(--accent); color: var(--accent-2); border-radius: 5px;
+    padding: 1px 6px; font: inherit; min-width: 60px; }
+  .blankin.ok { border-color: var(--accent-2); background: #11331f; }
+  .blankin.bad { border-color: var(--danger); background: #331515; color: var(--danger); }
+  .bugline { display: block; padding: 2px 10px; border-radius: 4px; cursor: pointer; border: 1px solid transparent; }
+  .bugline:hover { background: var(--panel-2); border-color: var(--border); }
+  .bugline.picked { border-color: var(--accent); }
+  .bugline.right { background: #11331f; border-color: var(--accent-2); }
+  .bugline.wrongpick { background: #331515; border-color: var(--danger); }
+  .timer { font-family: Menlo, monospace; font-size: 28px; font-weight: 700; letter-spacing: 1px; }
+  .timer.low { color: var(--danger); }
+  textarea.editor { width: 100%; min-height: 200px; background: var(--code-bg); color: var(--text);
+    border: 1px solid var(--border); border-radius: 8px; padding: 12px; font: 13px/1.55 "SF Mono", Menlo, monospace; resize: vertical; }
+  .checklist { list-style: none; padding: 0; margin: 14px 0; }
+  .checklist li { padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .checklist label { display: flex; gap: 10px; align-items: center; cursor: pointer; }
+  .checklist input { width: 18px; height: 18px; }
+  .checklist input:checked + span { color: var(--accent-2); text-decoration: line-through; }
+  .game-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 680px) { .game-grid { grid-template-columns: 1fr; } }
+  .game-card { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px;
+    margin-bottom: 8px; cursor: pointer; font-size: 13px; }
+  .game-card.sel { border-color: var(--accent); background: #102036; }
+  .game-card.assigned { opacity: .55; }
+  .game-card.right { border-color: var(--accent-2); }
+  .game-card.wrong { border-color: var(--danger); }
+  .bucket { background: var(--panel); border: 1px dashed var(--border); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; cursor: pointer; }
+  .bucket:hover { border-color: var(--accent); }
+  .bucket .bk-name { font-weight: 700; font-size: 13px; }
+  .bucket .bk-items { font-size: 12px; color: var(--muted); margin-top: 4px; min-height: 16px; }
+  .feedback-box { margin-top: 16px; padding: 14px; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--border); }
+  .feedback-box b { color: var(--accent-2); }
+  .sheet-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .sheet-table th, .sheet-table td { border: 1px solid var(--border); padding: 6px 8px; text-align: left; vertical-align: top; }
+  .sheet-table th { background: var(--panel-2); color: var(--accent); position: sticky; top: 0; }
+  .sheet-table input { width: 100%; background: transparent; border: none; color: var(--text); font: inherit; }
+  .sheet-table input:focus { outline: 1px solid var(--accent); border-radius: 3px; }
+  .sheet-ref { color: var(--accent-2); font-size: 12px; display: none; }
+  .reveal .sheet-ref { display: block; }
+  .token { cursor: pointer; padding: 1px 2px; border-radius: 4px; user-select: none; }
+  .token.sel { background: var(--accent); color: #06121f; }
+  .token.hit { background: #11331f; color: var(--accent-2); }
+  .token.miss { outline: 1px dashed var(--accent-2); }
+  .token.fp { background: #331515; color: var(--danger); }
+  /* Stats */
+  .mbar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+  .mbar-name { width: 190px; font-size: 13px; flex-shrink: 0; }
+  .mbar-track { flex: 1; height: 10px; background: var(--panel-2); border-radius: 999px; overflow: hidden; }
+  .mbar-fill { height: 100%; border-radius: 999px; }
+  .mbar-val { width: 38px; text-align: right; font-size: 12px; color: var(--muted); }
+  .stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 14px; margin-bottom: 24px; }
+  .stat-box { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+  .stat-box .big { font-size: 30px; font-weight: 800; }
+  .stat-box .lbl { color: var(--muted); font-size: 12px; }
+  .heat { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 12px); gap: 3px; overflow-x: auto; padding-bottom: 6px; }
+  .heat .cell { width: 12px; height: 12px; border-radius: 3px; background: var(--panel-2); }
+  .weak-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
 </style>
 </head>
 <body>
@@ -158,7 +227,9 @@
   <nav class="tabs">
     <button class="tab active" data-view="patterns">Patterns</button>
     <button class="tab" data-view="identify">How to Identify</button>
-    <button class="tab" data-view="quiz">Recognition Quiz</button>
+    <button class="tab" data-view="train">Train</button>
+    <button class="tab" data-view="quiz">Quick Quiz</button>
+    <button class="tab" data-view="stats">Stats</button>
     <button class="tab" data-view="plan">Study Plan</button>
   </nav>
 </header>
@@ -209,6 +280,34 @@
     <div id="planList"></div>
   </section>
 </div>
+
+  <!-- TRAIN -->
+  <section id="view-train" class="view">
+    <div id="trainMenu">
+      <p class="intro">Pick a training mode. Each one drills a different skill — recognition, recall, template fluency, or realistic practice. Your results feed the mastery scores on the <b>Stats</b> tab.</p>
+      <div class="grid" id="trainGrid"></div>
+    </div>
+    <div id="trainStage" style="display:none;">
+      <div class="stage-head">
+        <button class="back-btn" id="trainBack">← All modes</button>
+        <div><h2 id="stageTitle"></h2><div class="desc" id="stageDesc"></div></div>
+      </div>
+      <div class="stage" id="stageBody"></div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section id="view-stats" class="view">
+    <p class="intro">Mastery rises when you answer correctly and slowly decays when you don't practice — so this shows what's getting rusty. All data lives in your browser.</p>
+    <div class="stat-cards" id="statCards"></div>
+    <div class="section-title">Per-pattern mastery</div>
+    <div id="masteryBars"></div>
+    <div class="section-title" style="margin-top:28px;">Your 3 shakiest patterns</div>
+    <div id="weakList"></div>
+    <div class="section-title" style="margin-top:28px;">Activity (last 12 weeks)</div>
+    <div class="heat" id="heatmap"></div>
+    <div style="margin-top:18px;"><button class="reset-link" id="resetStats">reset all stats &amp; activity</button></div>
+  </section>
 
 <!-- Drawer -->
 <div class="overlay" id="overlay"></div>
@@ -1366,6 +1465,8 @@ function switchView(name) {
   document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
   document.getElementById("view-" + name).classList.add("active");
   if (name === "quiz" && quizOrder.length === 0) startQuiz();
+  if (name === "train") showTrainMenu();
+  if (name === "stats") renderStats();
 }
 document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => switchView(t.dataset.view)));
 
@@ -1382,6 +1483,725 @@ document.querySelectorAll("#freqFilters .filter-btn").forEach(btn => {
 /* ---- Reset progress ---- */
 document.getElementById("resetProg").addEventListener("click", () => {
   if (confirm("Clear all 'learned' marks?")) { learned = new Set(); saveLearned(learned); renderGrid(); }
+});
+
+/* ============================================================
+   TRAINING DATA TABLES
+   ============================================================ */
+const TRIGGER_WORDS = {
+  "two-pointers": ["sorted","pair","palindrome","two","reverse","target","indices","constant"],
+  "sliding-window": ["longest","substring","contiguous","window","subarray","consecutive","shortest","repeating"],
+  "hash-map": ["unsorted","complement","seen","count","frequency","duplicate","anagram","group"],
+  "binary-search": ["sorted","rotated","log","minimize","maximum","boundary","smallest"],
+  "dfs": ["connected","islands","path","grid","tree","components","explore","reachable"],
+  "bfs": ["shortest","minimum","moves","level","fewest","steps","unweighted"],
+  "backtracking": ["all","subsets","combinations","permutations","generate","every","partition"],
+  "dynamic-programming": ["ways","number","min","max","cost","longest","reach","coins","distinct"],
+  "heap": ["kth","largest","smallest","top","closest","merge","median"],
+  "intervals": ["intervals","overlap","overlapping","merge","ranges","schedule","meeting"],
+  "linked-list": ["linked","list","cycle","reverse","middle","nth","node"],
+  "stack": ["parentheses","brackets","matched","nested","next","greater","valid"],
+  "trie": ["prefix","startswith","autocomplete","dictionary","words","starts"],
+  "union-find": ["connected","components","groups","edges","provinces","union"],
+  "greedy": ["maximum","minimum","reach","jump","farthest","fewest"],
+  "bit-manipulation": ["single","xor","bits","twice","once","power"],
+  "topological-sort": ["prerequisite","prerequisites","order","dependency","courses","before"]
+};
+const TEACH_KEYS = {
+  "two-pointers": ["pointer","sorted","ends","space"],
+  "sliding-window": ["window","contiguous","shrink","expand"],
+  "hash-map": ["lookup","seen","complement","constant"],
+  "binary-search": ["half","sorted","monotonic","log"],
+  "dfs": ["deep","recursion","visited","branch"],
+  "bfs": ["queue","level","shortest","unweighted"],
+  "backtracking": ["choice","undo","recurse","combinations"],
+  "dynamic-programming": ["subproblem","overlapping","memo","recurrence"],
+  "heap": ["min","log","top","extract"],
+  "intervals": ["sort","overlap","start","sweep"],
+  "linked-list": ["pointer","next","dummy","reverse"],
+  "stack": ["stack","recent","monotonic","pop"],
+  "trie": ["prefix","character","tree","word"],
+  "union-find": ["group","union","find","components"],
+  "greedy": ["local","optimal","sort","choice"],
+  "bit-manipulation": ["xor","bits","mask","shift"],
+  "topological-sort": ["dependency","indegree","order","cycle"]
+};
+const CDRILL = [
+  { label:"Binary search on a sorted array", code:`let lo=0, hi=n-1;\nwhile (lo <= hi) {\n  const mid = (lo+hi) >> 1;\n  if (a[mid] === t) return mid;\n  a[mid] < t ? lo = mid+1 : hi = mid-1;\n}`, options:["O(1)","O(log n)","O(n)","O(n log n)"], answer:"O(log n)", why:"Each step halves the search space." },
+  { label:"Check every pair", code:`for (let i=0;i<n;i++)\n  for (let j=i+1;j<n;j++)\n    if (a[i]+a[j]===t) return [i,j];`, options:["O(n)","O(n log n)","O(n^2)","O(2^n)"], answer:"O(n^2)", why:"Nested loops over n give ~n²/2 pairs." },
+  { label:"One pass with a hash set", code:`const seen=new Set();\nfor (const x of a) {\n  if (seen.has(t-x)) return true;\n  seen.add(x);\n}`, options:["O(1)","O(log n)","O(n)","O(n^2)"], answer:"O(n)", why:"Single pass; each lookup/insert is O(1) average." },
+  { label:"Sort, then sweep once", code:`a.sort((x,y)=>x-y);\nfor (let i=1;i<n;i++) merge(a[i]);`, options:["O(n)","O(n log n)","O(n^2)","O(log n)"], answer:"O(n log n)", why:"The sort dominates the linear sweep." },
+  { label:"Generate all subsets", code:`function go(i,path){\n  if (i===n) { out.push([...path]); return; }\n  go(i+1, path);\n  path.push(a[i]); go(i+1, path); path.pop();\n}`, options:["O(n^2)","O(n log n)","O(2^n)","O(n)"], answer:"O(2^n)", why:"Two branches at each of n elements → 2ⁿ subsets." },
+  { label:"Top-k with a size-k heap", code:`for (const x of a) {\n  heap.push(x);\n  if (heap.size() > k) heap.pop();\n}`, options:["O(n)","O(n log k)","O(n log n)","O(k^n)"], answer:"O(n log k)", why:"n inserts/pops on a heap capped at size k." },
+  { label:"Two pointers from both ends", code:`let l=0, r=n-1;\nwhile (l < r) {\n  if (cond) l++; else r--;\n}`, options:["O(log n)","O(n)","O(n^2)","O(1)"], answer:"O(n)", why:"The pointers move toward each other ≤ n steps total." },
+  { label:"DFS over a tree of n nodes", code:`function dfs(node){\n  if (!node) return;\n  dfs(node.left);\n  dfs(node.right);\n}`, options:["O(log n)","O(n)","O(n log n)","O(n^2)"], answer:"O(n)", why:"Each node is visited exactly once." }
+];
+const TRAPS = [
+  { scenario:"Find the longest contiguous subarray whose sum is ≤ k.", options:["sliding-window","two-pointers"], answer:"sliding-window", why:"'Contiguous + longest window' is sliding window. Plain two-pointers is for sorted pair-to-target problems." },
+  { scenario:"Minimum number of coins to make an amount with arbitrary denominations.", options:["greedy","dynamic-programming"], answer:"dynamic-programming", why:"Greedy fails for arbitrary coins (e.g. [1,3,4], amount 6). Min cost from subproblems is DP." },
+  { scenario:"Two numbers in a SORTED array summing to target, using O(1) extra space.", options:["two-pointers","hash-map"], answer:"two-pointers", why:"A hash map works but costs O(n) space; sorted + O(1) space is the converging two-pointers signature." },
+  { scenario:"Fewest moves from start to exit in an unweighted maze.", options:["bfs","dfs"], answer:"bfs", why:"DFS finds *a* path but BFS guarantees the *shortest* one in an unweighted graph." },
+  { scenario:"Count the distinct ways to climb n stairs (1 or 2 steps).", options:["dynamic-programming","backtracking"], answer:"dynamic-programming", why:"Backtracking enumerates every path (exponential). 'Number of ways' = DP." },
+  { scenario:"Detect a cycle in an UNDIRECTED graph as edges are added one by one.", options:["union-find","dfs"], answer:"union-find", why:"DFS works on a static graph, but DSU shines when edges arrive incrementally — a union that finds the ends already joined is a cycle." },
+  { scenario:"Largest rectangle area in a histogram.", options:["stack","dynamic-programming"], answer:"stack", why:"A monotonic (increasing) stack of bar indices solves it in O(n)." },
+  { scenario:"Return a valid order to take courses given prerequisite pairs.", options:["topological-sort","dfs"], answer:"topological-sort", why:"DFS is the engine, but the *pattern* is topological sort — ordering a DAG and detecting cycles." }
+];
+const BLANKS = {
+  "two-pointers": { code:`while (l < r) {\n  const sum = arr[l] + arr[r];\n  if (sum === target) return [l, r];\n  if (sum < target) ⟦0⟧;   // need bigger\n  else ⟦1⟧;                // need smaller\n}`, answers:["l++","r--"] },
+  "sliding-window": { code:`for (let right = 0; right < s.length; right++) {\n  add(s[right]);\n  while (invalid) { remove(s[left]); ⟦0⟧; }\n  best = Math.max(best, ⟦1⟧);\n}`, answers:["left++","right - left + 1"] },
+  "hash-map": { code:`for (let i = 0; i < nums.length; i++) {\n  const need = ⟦0⟧;\n  if (seen.has(need)) return [seen.get(need), i];\n  seen.set(⟦1⟧, i);\n}`, answers:["target - nums[i]","nums[i]"] },
+  "binary-search": { code:`while (lo <= hi) {\n  const mid = lo + ((hi - lo) >> 1);\n  if (arr[mid] === target) return mid;\n  if (arr[mid] < target) lo = ⟦0⟧;\n  else hi = ⟦1⟧;\n}`, answers:["mid + 1","mid - 1"] },
+  "dfs": { code:`function dfs(node) {\n  if (!node || visited.has(node)) return;\n  ⟦0⟧;            // mark seen\n  for (const next of neighbors(node)) ⟦1⟧;\n}`, answers:["visited.add(node)","dfs(next)"] },
+  "bfs": { code:`while (queue.length) {\n  const size = queue.length;\n  for (let i = 0; i < size; i++) {\n    const node = ⟦0⟧;\n    for (const next of neighbors(node))\n      if (!visited.has(next)) { visited.add(next); ⟦1⟧; }\n  }\n  steps++;\n}`, answers:["queue.shift()","queue.push(next)"] },
+  "backtracking": { code:`for (let i = start; i < nums.length; i++) {\n  path.push(nums[i]);     // choose\n  backtrack(⟦0⟧, path);\n  ⟦1⟧;                    // un-choose\n}`, answers:["i + 1","path.pop()"] },
+  "dynamic-programming": { code:`dp[0] = base0; dp[1] = base1;\nfor (let i = 2; i <= n; i++)\n  dp[i] = ⟦0⟧;\nreturn ⟦1⟧;`, answers:["dp[i-1] + dp[i-2]","dp[n]"] },
+  "heap": { code:`for (const n of nums) {\n  heap.push(n);\n  if (heap.size() > k) ⟦0⟧;\n}\nreturn ⟦1⟧;`, answers:["heap.pop()","heap.peek()"] },
+  "intervals": { code:`intervals.sort((a, b) => ⟦0⟧);\nfor (const [s, e] of rest) {\n  if (s <= last[1]) last[1] = Math.max(last[1], e);\n  else ⟦1⟧;\n}`, answers:["a[0] - b[0]","out.push([s, e])"] },
+  "linked-list": { code:`let prev = null, cur = head;\nwhile (cur) {\n  const next = cur.next;\n  cur.next = ⟦0⟧;\n  prev = cur;\n  cur = ⟦1⟧;\n}\nreturn prev;`, answers:["prev","next"] },
+  "stack": { code:`for (const ch of s) {\n  if (ch in pairs) {\n    if (stack.pop() !== ⟦0⟧) return false;\n  } else ⟦1⟧;\n}\nreturn stack.length === 0;`, answers:["pairs[ch]","stack.push(ch)"] },
+  "trie": { code:`insert(word) {\n  let node = this.root;\n  for (const ch of word) node = ⟦0⟧;\n  node.end = ⟦1⟧;\n}`, answers:["node[ch] ??= {}","true"] },
+  "union-find": { code:`union(a, b) {\n  let ra = this.find(a), rb = this.find(b);\n  if (ra === rb) return ⟦0⟧;   // already joined → cycle\n  this.p[rb] = ⟦1⟧;\n  return true;\n}`, answers:["false","ra"] },
+  "greedy": { code:`let farthest = 0;\nfor (let i = 0; i < nums.length; i++) {\n  if (i > farthest) return false;\n  farthest = Math.max(farthest, ⟦0⟧);\n}\nreturn ⟦1⟧;`, answers:["i + nums[i]","true"] },
+  "bit-manipulation": { code:`let x = 0;\nfor (const n of nums) x ⟦0⟧= n;\nreturn ⟦1⟧;`, answers:["^","x"] },
+  "topological-sort": { code:`for (let i = 0; i < n; i++) if (indeg[i] === 0) queue.push(i);\nwhile (queue.length) {\n  const node = queue.shift();\n  order.push(node);\n  for (const next of adj[node]) if (⟦0⟧ === 0) queue.push(next);\n}\nreturn order.length === n ? order : ⟦1⟧;`, answers:["--indeg[next]","[]"] }
+};
+const BUGS = [
+  { pattern:"sliding-window", title:"Longest substring without repeats", lines:[
+    "let left = 0, best = 0;",
+    "for (let right = 0; right < s.length; right++) {",
+    "  if (seen.has(s[right])) { seen.delete(s[left]); left++; }",
+    "  seen.add(s[right]);",
+    "  best = Math.max(best, right - left + 1);",
+    "}"], bug:2, why:"Shrinking with `if` removes only one char. You need `while` to keep removing until the duplicate is gone." },
+  { pattern:"hash-map", title:"Two Sum", lines:[
+    "for (let i = 0; i < nums.length; i++) {",
+    "  seen.set(nums[i], i);",
+    "  const need = target - nums[i];",
+    "  if (seen.has(need)) return [seen.get(need), i];",
+    "}"], bug:1, why:"Inserting before checking lets a number match itself (same index twice). Set *after* the lookup." },
+  { pattern:"binary-search", title:"Binary search", lines:[
+    "while (lo <= hi) {",
+    "  const mid = (lo + hi) >> 1;",
+    "  if (arr[mid] < target) lo = mid;",
+    "  else hi = mid - 1;",
+    "}"], bug:2, why:"`lo = mid` can loop forever when mid stops moving. Advance past it with `mid + 1`." },
+  { pattern:"bfs", title:"BFS over a graph", lines:[
+    "queue.push(start);",
+    "while (queue.length) {",
+    "  const node = queue.shift();",
+    "  for (const next of neighbors(node)) queue.push(next);",
+    "}"], bug:3, why:"Nodes are enqueued with no visited check/mark → infinite revisits. Guard with a visited set." },
+  { pattern:"backtracking", title:"Subsets", lines:[
+    "const go = (start, path) => {",
+    "  res.push(path);",
+    "  for (let i = start; i < nums.length; i++) {",
+    "    path.push(nums[i]); go(i+1, path); path.pop();",
+    "  }",
+    "};"], bug:1, why:"Pushing `path` stores a live reference; later mutations corrupt every result. Use `[...path]`." },
+  { pattern:"linked-list", title:"Reverse a linked list", lines:[
+    "let prev = null, cur = head;",
+    "while (cur) {",
+    "  cur.next = prev;",
+    "  prev = cur;",
+    "  cur = cur.next;",
+    "}"], bug:2, why:"Overwriting `cur.next` before saving it loses the rest of the list. Save `next` first." },
+  { pattern:"stack", title:"Valid parentheses", lines:[
+    "for (const ch of s) {",
+    "  if (ch in pairs) { if (stack.pop() !== pairs[ch]) return false; }",
+    "  else stack.push(ch);",
+    "}",
+    "return true;"], bug:4, why:"Returning `true` ignores unclosed openers still on the stack. Return `stack.length === 0`." },
+  { pattern:"two-pointers", title:"Two Sum II (sorted)", lines:[
+    "let l = 0, r = arr.length - 1;",
+    "while (l < r) {",
+    "  const sum = arr[l] + arr[r];",
+    "  if (sum === target) return [l, r];",
+    "  if (sum < target) r--;",
+    "  else l++;",
+    "}"], bug:4, why:"On a sorted array a too-small sum means move the LEFT pointer up, not the right down." },
+  { pattern:"heap", title:"Kth largest", lines:[
+    "for (const n of nums) {",
+    "  heap.push(n);",
+    "  if (heap.size() >= k) heap.pop();",
+    "}",
+    "return heap.peek();"], bug:2, why:"`>=` pops when size equals k, leaving k−1 elements. Use `>` so exactly k remain." },
+  { pattern:"dynamic-programming", title:"Climbing stairs", lines:[
+    "const dp = new Array(n + 1);",
+    "for (let i = 2; i <= n; i++) dp[i] = dp[i-1] + dp[i-2];",
+    "return dp[n];"], bug:1, why:"`dp[0]` and `dp[1]` were never initialized, so every value is NaN. Set the base cases first." }
+];
+
+/* ============================================================
+   TRAINING ENGINES — mastery, spaced repetition, activity
+   ============================================================ */
+function lsGet(k, fb){ try { return JSON.parse(localStorage.getItem(k)) ?? fb; } catch { return fb; } }
+function lsSet(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
+function todayKey(){ const d = new Date(); return d.toISOString().slice(0,10); }
+function dayNum(){ return Math.floor(Date.now() / 86400000); }
+function shuf(a){ const x=[...a]; for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]];} return x; }
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+
+let mastery  = lsGet("lc-mastery-v1", {});   // id -> {score, last:'YYYY-MM-DD'}
+let srs      = lsGet("lc-srs-v1", {});       // id -> {box, due:dayNum}
+let activity = lsGet("lc-activity-v1", {});  // 'YYYY-MM-DD' -> count
+
+function effMastery(id){
+  const m = mastery[id]; if (!m) return 0;
+  const days = Math.max(0, dayNum() - Math.floor(new Date(m.last+"T00:00:00").getTime()/86400000));
+  return Math.max(0, Math.round(m.score - days * 1.5));   // ~1.5 pts/day decay
+}
+function bumpMastery(id, correct){
+  const cur = mastery[id] ? mastery[id].score : 0;
+  const next = Math.max(0, Math.min(100, cur + (correct ? 14 : -8)));
+  mastery[id] = { score: next, last: todayKey() };
+  lsSet("lc-mastery-v1", mastery);
+}
+const SRS_INTERVALS = [0, 1, 3, 7, 16];   // days per Leitner box (1..5)
+function bumpSrs(id, correct){
+  const box = srs[id] ? srs[id].box : 1;
+  const nb = correct ? Math.min(5, box + 1) : 1;
+  srs[id] = { box: nb, due: dayNum() + SRS_INTERVALS[nb - 1] };
+  lsSet("lc-srs-v1", srs);
+}
+function srsDueScore(id){            // lower = more urgent
+  const s = srs[id]; if (!s) return -999; // never seen -> most urgent
+  return s.due - dayNum();
+}
+function recordActivity(){
+  const k = todayKey();
+  activity[k] = (activity[k] || 0) + 1;
+  lsSet("lc-activity-v1", activity);
+}
+function afterAnswer(correct, patternId){
+  if (patternId){ bumpMastery(patternId, correct); bumpSrs(patternId, correct); }
+  recordActivity();
+}
+
+/* ============================================================
+   TRAIN HUB
+   ============================================================ */
+const TRAIN_MODES = [
+  { id:"srs",        icon:"🔁", name:"Spaced Repetition",         desc:"Adaptive quiz that resurfaces the patterns you miss most." },
+  { id:"trigger",    icon:"🔦", name:"Spot the Trigger Words",    desc:"Click the phrases in a problem that reveal the pattern." },
+  { id:"reverse",    icon:"🔄", name:"Reverse Quiz",              desc:"Given a pattern, recall its cues & template from memory." },
+  { id:"trap",       icon:"⚔️", name:"Two-Pattern Traps",         desc:"Two patterns both seem to fit — pick the right one." },
+  { id:"blank",      icon:"✏️", name:"Fill-in-the-Blank",         desc:"Type the key lines of each template from memory." },
+  { id:"scratch",    icon:"⏱️", name:"Code-from-Scratch Timer",   desc:"Blank editor, a prompt, a timer, then self-grade." },
+  { id:"bug",        icon:"🐛", name:"Spot the Bug",              desc:"Find the classic mistake baked into a template." },
+  { id:"complexity", icon:"📐", name:"Complexity Drill",          desc:"Guess the Big-O of a snippet before revealing." },
+  { id:"random",     icon:"🎲", name:"Random Problem",            desc:"A real problem with the pattern hidden — guess it." },
+  { id:"daily",      icon:"📅", name:"Daily Mix",                 desc:"8 interleaved challenges + a streak counter." },
+  { id:"mock",       icon:"🎤", name:"Mock Interview",            desc:"A random Medium, 25-min timer, structured prompts." },
+  { id:"match",      icon:"🃏", name:"Pattern-Matching Game",     desc:"Sort problem cards into pattern buckets, timed." },
+  { id:"teach",      icon:"🧑‍🏫", name:"Teach It Back",           desc:"Explain a pattern in your words; compare to the reference." },
+  { id:"cheatsheet", icon:"📋", name:"Build Your Cheat Sheet",    desc:"Fill the one-page grid from memory; print it." },
+];
+const trainGrid  = document.getElementById("trainGrid");
+const trainMenu  = document.getElementById("trainMenu");
+const trainStage = document.getElementById("trainStage");
+const stageBody  = document.getElementById("stageBody");
+TRAIN_MODES.forEach(m => {
+  const c = document.createElement("div");
+  c.className = "card mode-card";
+  c.innerHTML = `<div class="icon">${m.icon}</div><h3>${m.name}</h3><div class="tagline">${m.desc}</div>`;
+  c.addEventListener("click", () => openTrainMode(m));
+  trainGrid.appendChild(c);
+});
+function showTrainMenu(){ trainMenu.style.display = "block"; trainStage.style.display = "none"; }
+let _stageTimer = null;
+function clearStageTimer(){ if (_stageTimer){ clearInterval(_stageTimer); _stageTimer = null; } }
+function openTrainMode(m){
+  clearStageTimer();
+  trainMenu.style.display = "none"; trainStage.style.display = "block";
+  document.getElementById("stageTitle").textContent = m.icon + "  " + m.name;
+  document.getElementById("stageDesc").textContent = m.desc;
+  stageBody.innerHTML = "";
+  (MODE_RENDERERS[m.id] || (() => stageBody.innerHTML = "<div class='panel'>Coming soon.</div>"))();
+}
+document.getElementById("trainBack").addEventListener("click", () => { showTrainMenu(); window.scrollTo(0,0); });
+
+/* shared: a "Next" button that regenerates a mode */
+function nextButton(host, fn, label){
+  const b = document.createElement("button");
+  b.className = "btn"; b.style.marginTop = "16px"; b.textContent = label || "Next →";
+  b.addEventListener("click", () => { host.innerHTML = ""; fn(host); });
+  host.appendChild(b);
+}
+
+/* ============================================================
+   MODE RENDERERS
+   ============================================================ */
+const MODE_RENDERERS = {};
+const ALL_PROBLEMS = PATTERNS.flatMap(p => p.problems.map(pr => ({ ...pr, patternId: p.id, patternName: p.name })));
+function el(tag, cls){ const e = document.createElement(tag); if (cls) e.className = cls; return e; }
+function patternOption(id){ const p = patternById[id]; return { val: id, label: p.icon + "  " + p.name }; }
+function distractors(exceptId, n){ return shuf(PATTERNS.filter(p => p.id !== exceptId)).slice(0, n).map(p => p.id); }
+function lcLink(name){ return `https://leetcode.com/problems/?search=${encodeURIComponent(name)}`; }
+
+function renderMCQ(host, cfg){
+  host.innerHTML = "";
+  const panel = el("div", "panel");
+  panel.innerHTML = `<div class="quiz-prompt">${cfg.promptHTML}</div>`;
+  const opts = el("div", "quiz-opts");
+  cfg.options.forEach(o => {
+    const b = el("button", "quiz-opt"); b.textContent = o.label; b._val = o.val;
+    b.onclick = () => {
+      if (panel.dataset.done) return; panel.dataset.done = "1";
+      const correct = o.val === cfg.correctVal;
+      [...opts.children].forEach(x => { if (x._val === cfg.correctVal) x.classList.add("correct"); });
+      if (!correct) b.classList.add("wrong");
+      const fb = el("div", "feedback-box");
+      fb.innerHTML = (correct ? "✅ <b>Correct.</b> " : "❌ Not quite. ") + cfg.why;
+      panel.appendChild(fb);
+      afterAnswer(correct, cfg.patternId || null);
+      cfg.done && cfg.done(correct);
+    };
+    opts.appendChild(b);
+  });
+  panel.appendChild(opts);
+  host.appendChild(panel);
+}
+
+/* --- single challenges (also reused by Daily Mix) --- */
+function chRecognition(host, done){
+  const item = pick(QUIZ);
+  const options = shuf([item.a, ...distractors(item.a, 3)]).map(patternOption);
+  renderMCQ(host, { promptHTML: `<b>Which pattern?</b><br>${item.q}`, options, correctVal: item.a, patternId: item.a, why: item.why, done });
+}
+function chSrs(host, done){
+  const ordered = PATTERNS.map(p => p.id).sort((a, b) => srsDueScore(a) - srsDueScore(b));
+  let target = ordered.find(id => QUIZ.some(q => q.a === id)) || pick(QUIZ).a;
+  const pool = QUIZ.filter(q => q.a === target);
+  const item = pick(pool);
+  const options = shuf([item.a, ...distractors(item.a, 3)]).map(patternOption);
+  const boxNote = srs[target] ? ` <span style="color:var(--muted)">(box ${srs[target].box}/5)</span>` : ` <span style="color:var(--muted)">(new)</span>`;
+  renderMCQ(host, { promptHTML: `<b>Which pattern?</b>${boxNote}<br>${item.q}`, options, correctVal: item.a, patternId: item.a, why: item.why, done });
+}
+function chTrap(host, done){
+  const t = pick(TRAPS);
+  const options = shuf(t.options).map(patternOption);
+  renderMCQ(host, { promptHTML: `<b>Two patterns could fit — which is right?</b><br>${t.scenario}`, options, correctVal: t.answer, patternId: t.answer, why: t.why, done });
+}
+function chComplexity(host, done){
+  const c = pick(CDRILL);
+  const options = c.options.map(o => ({ val: o, label: o }));
+  renderMCQ(host, { promptHTML: `<b>What's the time complexity?</b> <span style="color:var(--muted)">${c.label}</span><pre class="code">${highlight(c.code)}</pre>`, options, correctVal: c.answer, patternId: null, why: c.why, done });
+}
+function chRandom(host, done){
+  const pr = pick(ALL_PROBLEMS);
+  const options = shuf([pr.patternId, ...distractors(pr.patternId, 3)]).map(patternOption);
+  const dlabel = { easy:"Easy", med:"Medium", hard:"Hard" }[pr.d];
+  renderMCQ(host, { promptHTML: `<b>Which pattern would you use?</b><br><span style="font-size:18px">#${pr.num} · ${pr.name}</span> <span class="d ${pr.d}">${dlabel}</span>`, options, correctVal: pr.patternId, patternId: pr.patternId, why: `<a href="${lcLink(pr.name)}" target="_blank" rel="noopener">Open on LeetCode →</a>`, done });
+}
+
+function loopMode(factory){
+  stageBody.innerHTML = "";
+  const host = el("div");
+  stageBody.appendChild(host);
+  const run = (h) => { factory(h, () => nextButton(h, run)); };
+  run(host);
+}
+MODE_RENDERERS.srs        = () => loopMode(chSrs);
+MODE_RENDERERS.trap       = () => loopMode(chTrap);
+MODE_RENDERERS.complexity = () => loopMode(chComplexity);
+MODE_RENDERERS.random     = () => loopMode(chRandom);
+
+/* --- Spot the Trigger Words --- */
+function normWord(w){ return w.toLowerCase().replace(/[^a-z]/g, ""); }
+MODE_RENDERERS.trigger = () => loopMode((host, onNext) => {
+  const item = pick(QUIZ);
+  const triggers = TRIGGER_WORDS[item.a] || [];
+  const words = item.q.split(/(\s+)/);   // keep spaces
+  host.innerHTML = "";
+  const panel = el("div", "panel");
+  panel.innerHTML = `<div class="quiz-prompt"><b>Click the words that signal the pattern</b>, then Check.</div>`;
+  const sent = el("div"); sent.style.fontSize = "16px"; sent.style.lineHeight = "2";
+  const picks = new Set();
+  words.forEach((w) => {
+    if (/^\s+$/.test(w)) { sent.appendChild(document.createTextNode(w)); return; }
+    const span = el("span", "token"); span.textContent = w;
+    span.onclick = () => { if (panel.dataset.done) return; span.classList.toggle("sel"); span._sel = !span._sel; span._sel ? picks.add(span) : picks.delete(span); };
+    span._word = normWord(w);
+    sent.appendChild(span);
+  });
+  panel.appendChild(sent);
+  const check = el("button", "btn"); check.style.marginTop = "16px"; check.textContent = "Check";
+  check.onclick = () => {
+    if (panel.dataset.done) return; panel.dataset.done = "1";
+    let hits = 0, fps = 0, totalTriggers = 0;
+    [...sent.querySelectorAll(".token")].forEach(t => {
+      const isTrig = triggers.includes(t._word);
+      if (isTrig) totalTriggers++;
+      if (t._sel && isTrig) { t.classList.add("hit"); t.classList.remove("sel"); hits++; }
+      else if (t._sel && !isTrig) { t.classList.add("fp"); t.classList.remove("sel"); fps++; }
+      else if (!t._sel && isTrig) { t.classList.add("miss"); }
+    });
+    const correct = hits > 0 && fps === 0;
+    const fb = el("div", "feedback-box");
+    fb.innerHTML = `${correct ? "✅ <b>Nice.</b>" : "Close —"} you found ${hits}/${totalTriggers} trigger words${fps ? `, with ${fps} false positive(s)` : ""}. This is <b>${patternById[item.a].name}</b>. <span style="color:var(--muted)">Triggers: ${triggers.join(", ")}.</span>`;
+    panel.appendChild(fb);
+    afterAnswer(correct, item.a);
+    onNext();
+  };
+  panel.appendChild(check);
+  host.appendChild(panel);
+});
+
+/* --- Reverse Quiz (active recall) --- */
+MODE_RENDERERS.reverse = () => loopMode((host, onNext) => {
+  const p = PATTERNS.map(x => x.id).sort((a, b) => srsDueScore(a) - srsDueScore(b))[0];
+  const pat = patternById[p];
+  host.innerHTML = "";
+  const panel = el("div", "panel");
+  panel.innerHTML = `<div style="font-size:30px">${pat.icon}</div><h2 style="margin:4px 0">${pat.name}</h2>
+    <p style="color:var(--muted)">From memory, recall: its <b>trigger cues</b>, the <b>template shape</b>, and the <b>complexity</b>. Then reveal.</p>`;
+  const reveal = el("button", "btn"); reveal.textContent = "Reveal answer";
+  reveal.onclick = () => {
+    reveal.remove();
+    const body = el("div");
+    body.innerHTML = `
+      <div class="section-title">Cues</div><ul class="cue-list">${pat.cues.map(c => `<li>${c}</li>`).join("")}</ul>
+      <div class="section-title">Template</div><pre class="code">${highlight(pat.template)}</pre>
+      <div class="section-title">Complexity</div><div class="complexity">${pat.complexity}</div>
+      <p style="margin-top:18px">How did you do?</p>`;
+    const row = el("div"); row.style.display = "flex"; row.style.gap = "10px";
+    const knew = el("button", "btn"); knew.textContent = "✓ I knew it";
+    const miss = el("button", "btn ghost"); miss.textContent = "✗ Missed it";
+    knew.onclick = () => { afterAnswer(true, p); onNext(); };
+    miss.onclick = () => { afterAnswer(false, p); onNext(); };
+    row.append(knew, miss); body.appendChild(row); panel.appendChild(body);
+  };
+  panel.appendChild(reveal);
+  host.appendChild(panel);
+});
+
+/* --- Fill-in-the-Blank Templates --- */
+MODE_RENDERERS.blank = () => loopMode((host, onNext) => {
+  const id = pick(Object.keys(BLANKS));
+  const spec = BLANKS[id];
+  host.innerHTML = "";
+  const panel = el("div", "panel");
+  panel.innerHTML = `<div class="quiz-prompt"><b>${patternById[id].icon} ${patternById[id].name}</b> — fill the missing lines, then Check.</div>`;
+  const pre = el("pre", "code mono-block");
+  const parts = spec.code.split(/(⟦\d⟧)/);
+  const inputs = [];
+  parts.forEach(seg => {
+    const m = seg.match(/⟦(\d)⟧/);
+    if (m) {
+      const inp = el("input", "blankin"); inp.size = Math.max(8, spec.answers[+m[1]].length);
+      inp.dataset.idx = m[1]; inp.spellcheck = false; inp.autocapitalize = "off";
+      inputs.push(inp); pre.appendChild(inp);
+    } else { pre.appendChild(document.createTextNode(seg)); }
+  });
+  panel.appendChild(pre);
+  const check = el("button", "btn"); check.style.marginTop = "16px"; check.textContent = "Check";
+  check.onclick = () => {
+    if (panel.dataset.done) return; panel.dataset.done = "1";
+    let allOk = true;
+    inputs.forEach(inp => {
+      const want = spec.answers[+inp.dataset.idx];
+      const ok = inp.value.replace(/\s+/g, "") === want.replace(/\s+/g, "");
+      inp.classList.add(ok ? "ok" : "bad"); if (!ok) { allOk = false; inp.value = want; }
+    });
+    const fb = el("div", "feedback-box");
+    fb.innerHTML = allOk ? "✅ <b>All correct!</b>" : "The right answers are filled in above (red = you missed it).";
+    panel.appendChild(fb);
+    afterAnswer(allOk, id);
+    onNext();
+  };
+  panel.appendChild(check);
+  host.appendChild(panel);
+});
+
+/* --- Spot the Bug --- */
+MODE_RENDERERS.bug = () => loopMode((host, onNext) => {
+  const b = pick(BUGS);
+  host.innerHTML = "";
+  const panel = el("div", "panel");
+  panel.innerHTML = `<div class="quiz-prompt"><b>${patternById[b.pattern].name} — ${b.title}.</b><br>Click the line with the bug.</div>`;
+  const pre = el("pre", "code");
+  b.lines.forEach((ln, i) => {
+    const line = el("span", "bugline"); line.textContent = ln || " ";
+    line.onclick = () => {
+      if (panel.dataset.done) return; panel.dataset.done = "1";
+      const correct = i === b.bug;
+      pre.children[b.bug].classList.add("right");
+      if (!correct) line.classList.add("wrongpick");
+      const fb = el("div", "feedback-box");
+      fb.innerHTML = `${correct ? "✅ <b>Found it.</b> " : "❌ The bug is the highlighted line. "}${b.why}`;
+      panel.appendChild(fb);
+      afterAnswer(correct, b.pattern);
+      onNext();
+    };
+    pre.appendChild(line);
+  });
+  panel.appendChild(pre);
+  host.appendChild(panel);
+});
+
+function fmtTime(sec){ const m = Math.floor(sec / 60), s = sec % 60; return m + ":" + String(s).padStart(2, "0"); }
+
+/* --- Code-from-Scratch Timer --- */
+MODE_RENDERERS.scratch = () => loopMode((host, onNext) => {
+  clearStageTimer();
+  const pat = pick(PATTERNS);
+  host.innerHTML = "";
+  const panel = el("div", "panel");
+  panel.innerHTML = `<div class="quiz-prompt"><b>Write the ${pat.name} template from memory.</b> <span style="color:var(--muted)">${pat.tagline}</span></div>`;
+  const tEl = el("div", "timer"); panel.appendChild(tEl);
+  const ta = el("textarea", "editor"); ta.placeholder = "// type it here…"; ta.spellcheck = false; panel.appendChild(ta);
+  let left = 180;
+  tEl.textContent = fmtTime(left);
+  _stageTimer = setInterval(() => { left--; tEl.textContent = fmtTime(left); if (left <= 30) tEl.classList.add("low"); if (left <= 0) { clearStageTimer(); } }, 1000);
+  const reveal = el("button", "btn"); reveal.style.marginTop = "14px"; reveal.textContent = "Reveal reference & grade";
+  reveal.onclick = () => {
+    clearStageTimer(); reveal.remove();
+    const ref = el("div");
+    ref.innerHTML = `<div class="section-title">Reference template</div><pre class="code">${highlight(pat.template)}</pre><p>How close were you?</p>`;
+    const row = el("div"); row.style.display = "flex"; row.style.gap = "10px";
+    const g = el("button", "btn"); g.textContent = "✓ Got it";
+    const n = el("button", "btn ghost"); n.textContent = "✗ Needs work";
+    g.onclick = () => { afterAnswer(true, pat.id); onNext(); };
+    n.onclick = () => { afterAnswer(false, pat.id); onNext(); };
+    row.append(g, n); ref.appendChild(row); panel.appendChild(ref);
+  };
+  panel.appendChild(reveal);
+  host.appendChild(panel);
+});
+
+/* --- Mock Interview --- */
+MODE_RENDERERS.mock = () => {
+  clearStageTimer();
+  const meds = ALL_PROBLEMS.filter(p => p.d === "med");
+  const pr = pick(meds);
+  stageBody.innerHTML = "";
+  const panel = el("div", "panel");
+  const steps = ["State the pattern you'll use & why","Clarify constraints and edge cases","Sketch pseudocode","Code the solution","Walk through a concrete example","State time & space complexity"];
+  panel.innerHTML = `<div class="quiz-prompt"><b>#${pr.num} · ${pr.name}</b> <span class="d med">Medium</span><br>
+    <a href="${lcLink(pr.name)}" target="_blank" rel="noopener">Open the full problem on LeetCode →</a></div>`;
+  const tEl = el("div", "timer"); panel.appendChild(tEl);
+  let left = 25 * 60; tEl.textContent = fmtTime(left); let running = false;
+  const controls = el("div"); controls.style.margin = "12px 0";
+  const startB = el("button", "btn"); startB.textContent = "Start";
+  const resetB = el("button", "btn ghost"); resetB.style.marginLeft = "8px"; resetB.textContent = "Reset";
+  startB.onclick = () => {
+    if (running) { clearStageTimer(); running = false; startB.textContent = "Resume"; return; }
+    running = true; startB.textContent = "Pause";
+    _stageTimer = setInterval(() => { left--; tEl.textContent = fmtTime(left); if (left <= 60) tEl.classList.add("low"); if (left <= 0) { clearStageTimer(); running = false; } }, 1000);
+  };
+  resetB.onclick = () => { clearStageTimer(); running = false; left = 25 * 60; tEl.textContent = fmtTime(left); tEl.classList.remove("low"); startB.textContent = "Start"; };
+  controls.append(startB, resetB); panel.appendChild(controls);
+  const ul = el("ul", "checklist");
+  steps.forEach(s => { const li = el("li"); li.innerHTML = `<label><input type="checkbox"><span>${s}</span></label>`; ul.appendChild(li); });
+  panel.appendChild(ul);
+  const finish = el("button", "btn"); finish.textContent = "Finish & log session";
+  finish.onclick = () => { clearStageTimer(); recordActivity(); finish.textContent = "✓ Logged"; finish.disabled = true; };
+  panel.appendChild(finish);
+  stageBody.appendChild(panel);
+};
+
+/* --- Daily Mix --- */
+MODE_RENDERERS.daily = () => {
+  clearStageTimer();
+  const factories = [chRecognition, chTrap, chComplexity, chRandom, chSrs];
+  const queue = Array.from({ length: 8 }, () => pick(factories));
+  let i = 0, score = 0;
+  stageBody.innerHTML = "";
+  const bar = el("div", "quiz-meta");
+  const host = el("div");
+  stageBody.append(bar, host);
+  const step = () => {
+    if (i >= queue.length) {
+      const s = computeStreak();
+      host.innerHTML = `<div class="panel"><h2>Done! ${score}/${queue.length} correct</h2>
+        <p>🔥 Current streak: <b>${s} day${s === 1 ? "" : "s"}</b>. Come back tomorrow to keep it alive.</p>
+        <button class="btn" id="dailyAgain">Run another set</button></div>`;
+      document.getElementById("dailyAgain").onclick = MODE_RENDERERS.daily;
+      return;
+    }
+    bar.innerHTML = `<span>Daily Mix</span><span>Question ${i + 1} / ${queue.length} · score ${score}</span>`;
+    host.innerHTML = "";
+    queue[i](host, (correct) => { if (correct) score++; i++; nextButton(host, () => step(), "Continue →"); });
+  };
+  step();
+};
+
+/* --- Pattern-Matching Game --- */
+MODE_RENDERERS.match = () => {
+  clearStageTimer();
+  const chosen = shuf(PATTERNS).slice(0, 5);
+  const cards = shuf(chosen.map(p => ({ ...pick(p.problems), patternId: p.id })));
+  stageBody.innerHTML = "";
+  const panel = el("div", "panel");
+  const tEl = el("div", "timer"); tEl.textContent = "0:00";
+  let secs = 0; _stageTimer = setInterval(() => { secs++; tEl.textContent = fmtTime(secs); }, 1000);
+  panel.innerHTML = `<div class="quiz-prompt"><b>Drag-free sorting:</b> click a problem card, then click the pattern bucket it belongs to.</div>`;
+  panel.appendChild(tEl);
+  const grid = el("div", "game-grid");
+  const left = el("div"), right = el("div");
+  left.innerHTML = `<div class="section-title">Problems</div>`;
+  right.innerHTML = `<div class="section-title">Patterns</div>`;
+  let selected = null;
+  const assign = {};  // cardName -> bucketId
+  cards.forEach(c => {
+    const card = el("div", "game-card"); card.textContent = `#${c.num} ${c.name}`; card._card = c;
+    card.onclick = () => { if (card.classList.contains("assigned")) return; [...left.querySelectorAll(".game-card")].forEach(x => x.classList.remove("sel")); card.classList.add("sel"); selected = card; };
+    left.appendChild(card);
+  });
+  shuf(chosen).forEach(p => {
+    const bk = el("div", "bucket"); bk.innerHTML = `<div class="bk-name">${p.icon} ${p.name}</div><div class="bk-items"></div>`;
+    bk.onclick = () => {
+      if (!selected) return;
+      assign[selected._card.name] = p.id;
+      selected.classList.remove("sel"); selected.classList.add("assigned");
+      bk.querySelector(".bk-items").textContent = (bk.querySelector(".bk-items").textContent + " " + selected.textContent).trim();
+      selected = null;
+    };
+    right.appendChild(bk);
+  });
+  grid.append(left, right); panel.appendChild(grid);
+  const check = el("button", "btn"); check.style.marginTop = "14px"; check.textContent = "Check";
+  check.onclick = () => {
+    clearStageTimer();
+    let right2 = 0;
+    cards.forEach(c => {
+      const card = [...left.querySelectorAll(".game-card")].find(x => x._card.name === c.name);
+      const ok = assign[c.name] === c.patternId;
+      card.classList.add(ok ? "right" : "wrong");
+      card.textContent = `#${c.num} ${c.name} → ${patternById[c.patternId].name}`;
+      if (ok) right2++;
+    });
+    const fb = el("div", "feedback-box"); fb.innerHTML = `<b>${right2}/${cards.length}</b> correct in ${fmtTime(secs)}.`;
+    panel.appendChild(fb);
+    recordActivity();
+    nextButton(panel, () => MODE_RENDERERS.match(), "New round");
+  };
+  panel.appendChild(check);
+  stageBody.appendChild(panel);
+};
+
+/* --- Teach It Back --- */
+MODE_RENDERERS.teach = () => loopMode((host, onNext) => {
+  const pat = pick(PATTERNS);
+  const keys = TEACH_KEYS[pat.id] || [];
+  host.innerHTML = "";
+  const panel = el("div", "panel");
+  panel.innerHTML = `<div class="quiz-prompt"><b>Explain ${pat.name} in your own words</b> — as if teaching a peer. When to use it, how it works, why it's fast.</div>`;
+  const ta = el("textarea", "editor"); ta.placeholder = "Teach it…"; panel.appendChild(ta);
+  const cmp = el("button", "btn"); cmp.style.marginTop = "14px"; cmp.textContent = "Compare to reference";
+  cmp.onclick = () => {
+    cmp.remove();
+    const txt = ta.value.toLowerCase();
+    const hit = keys.filter(k => txt.includes(k));
+    const ref = el("div");
+    ref.innerHTML = `<div class="section-title">Key ideas you hit (${hit.length}/${keys.length})</div>
+      <div>${keys.map(k => `<span class="pill" style="margin:2px;${hit.includes(k) ? "color:var(--accent-2);border-color:#2c5b3a" : "color:var(--danger);border-color:#5a2a2a"}">${hit.includes(k) ? "✓" : "✗"} ${k}</span>`).join("")}</div>
+      <div class="section-title">Reference explanation</div><p>${pat.explain}</p>`;
+    const row = el("div"); row.style.display = "flex"; row.style.gap = "10px"; row.style.marginTop = "14px";
+    const g = el("button", "btn"); g.textContent = "✓ I explained it well";
+    const n = el("button", "btn ghost"); n.textContent = "✗ Shaky";
+    g.onclick = () => { afterAnswer(true, pat.id); onNext(); };
+    n.onclick = () => { afterAnswer(false, pat.id); onNext(); };
+    row.append(g, n); ref.appendChild(row); panel.appendChild(ref);
+  };
+  panel.appendChild(cmp);
+  host.appendChild(panel);
+});
+
+/* --- Build Your Cheat Sheet --- */
+MODE_RENDERERS.cheatsheet = () => {
+  clearStageTimer();
+  stageBody.innerHTML = "";
+  const panel = el("div", "panel");
+  panel.innerHTML = `<div class="quiz-prompt"><b>Fill the grid from memory.</b> Then reveal to self-check, or print a blank/filled copy.</div>`;
+  const actions = el("div"); actions.style.margin = "0 0 14px";
+  const revealB = el("button", "btn"); revealB.textContent = "Reveal answers";
+  const printB = el("button", "btn ghost"); printB.style.marginLeft = "8px"; printB.textContent = "🖨 Print";
+  actions.append(revealB, printB); panel.appendChild(actions);
+  const tbl = el("table", "sheet-table");
+  tbl.innerHTML = `<thead><tr><th>Pattern</th><th>Your trigger words</th><th>Your complexity</th><th>When to use (1 line)</th></tr></thead>`;
+  const tb = el("tbody");
+  PATTERNS.forEach(p => {
+    const tr = el("tr");
+    tr.innerHTML = `<td>${p.icon} ${p.name}</td>
+      <td><input placeholder="…"><div class="sheet-ref">${(TRIGGER_WORDS[p.id] || []).slice(0,5).join(", ")}</div></td>
+      <td><input placeholder="…"><div class="sheet-ref">${p.complexity.replace(/<\/?b>/g, "")}</div></td>
+      <td><input placeholder="…"><div class="sheet-ref">${p.tagline}</div></td>`;
+    tb.appendChild(tr);
+  });
+  tbl.appendChild(tb); panel.appendChild(tbl);
+  revealB.onclick = () => { panel.classList.toggle("reveal"); revealB.textContent = panel.classList.contains("reveal") ? "Hide answers" : "Reveal answers"; recordActivity(); };
+  printB.onclick = () => window.print();
+  stageBody.appendChild(panel);
+};
+
+/* ============================================================
+   STATS
+   ============================================================ */
+function computeStreak(){
+  let s = 0, i = 0;
+  if (!activity[todayKey()]) i = 1;   // grace: count from yesterday during the day
+  for (;; i++){
+    const d = new Date(Date.now() - i * 86400000).toISOString().slice(0, 10);
+    if (activity[d]) s++; else break;
+  }
+  return s;
+}
+function masteryColor(v){
+  if (v >= 70) return "var(--accent-2)";
+  if (v >= 40) return "var(--warn)";
+  return "var(--danger)";
+}
+function renderStats(){
+  const scores = PATTERNS.map(p => ({ id: p.id, name: p.name, icon: p.icon, v: effMastery(p.id) }));
+  const avg = Math.round(scores.reduce((a, b) => a + b.v, 0) / scores.length);
+  const seen = scores.filter(s => mastery[s.id]).length;
+  const days = Object.keys(activity).length;
+  const totalReps = Object.values(activity).reduce((a, b) => a + b, 0);
+
+  document.getElementById("statCards").innerHTML = `
+    <div class="stat-box"><div class="big" style="color:${masteryColor(avg)}">${avg}</div><div class="lbl">Avg mastery</div></div>
+    <div class="stat-box"><div class="big">${computeStreak()}🔥</div><div class="lbl">Day streak</div></div>
+    <div class="stat-box"><div class="big">${seen}/16</div><div class="lbl">Patterns practiced</div></div>
+    <div class="stat-box"><div class="big">${learned.size}/16</div><div class="lbl">Marked learned</div></div>
+    <div class="stat-box"><div class="big">${totalReps}</div><div class="lbl">Total reps</div></div>
+    <div class="stat-box"><div class="big">${days}</div><div class="lbl">Active days</div></div>`;
+
+  document.getElementById("masteryBars").innerHTML = [...scores].sort((a, b) => b.v - a.v).map(s => `
+    <div class="mbar-row">
+      <div class="mbar-name">${s.icon} ${s.name}</div>
+      <div class="mbar-track"><div class="mbar-fill" style="width:${s.v}%;background:${masteryColor(s.v)}"></div></div>
+      <div class="mbar-val">${s.v}</div>
+    </div>`).join("");
+
+  const weak = [...scores].sort((a, b) => a.v - b.v).slice(0, 3);
+  document.getElementById("weakList").innerHTML = weak.map(s => `
+    <div class="weak-row">
+      <span style="font-size:18px">${s.icon}</span>
+      <span style="flex:1">${s.name} <span style="color:var(--muted)">— mastery ${s.v}</span></span>
+      <button class="btn" data-drill="${s.id}" style="padding:6px 12px">Drill</button>
+    </div>`).join("");
+  document.querySelectorAll("[data-drill]").forEach(b => b.onclick = () => {
+    switchView("train"); openTrainMode({ id: "reverse", icon: "🔄", name: "Reverse Quiz", desc: "Recall this pattern from memory." });
+  });
+
+  const heat = document.getElementById("heatmap"); heat.innerHTML = "";
+  let max = 1; Object.values(activity).forEach(v => max = Math.max(max, v));
+  for (let i = 83; i >= 0; i--){
+    const d = new Date(Date.now() - i * 86400000).toISOString().slice(0, 10);
+    const c = activity[d] || 0;
+    const cell = el("div", "cell");
+    if (c) { const t = Math.min(1, c / max); cell.style.background = `rgba(126,231,135,${0.25 + 0.75 * t})`; }
+    cell.title = `${d}: ${c} rep${c === 1 ? "" : "s"}`;
+    heat.appendChild(cell);
+  }
+}
+document.getElementById("resetStats").addEventListener("click", () => {
+  if (confirm("Erase all mastery, spaced-repetition, and activity data?")){
+    mastery = {}; srs = {}; activity = {};
+    lsSet("lc-mastery-v1", mastery); lsSet("lc-srs-v1", srs); lsSet("lc-activity-v1", activity);
+    renderStats();
+  }
 });
 
 /* ---- Init ---- */
