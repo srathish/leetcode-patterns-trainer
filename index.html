@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LeetCode Patterns Trainer — JavaScript</title>
+<style>
+  :root {
+    --bg: #0e1116;
+    --panel: #161b22;
+    --panel-2: #1c2330;
+    --border: #2a3340;
+    --text: #e6edf3;
+    --muted: #9aa7b4;
+    --accent: #4f9cf9;
+    --accent-2: #7ee787;
+    --warn: #f2cc60;
+    --danger: #ff7b72;
+    --code-bg: #0b0f14;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code, pre, .mono { font-family: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+
+  header.top {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(14,17,22,0.92); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  header.top h1 { font-size: 18px; margin: 0; letter-spacing: .2px; }
+  header.top .sub { color: var(--muted); font-size: 13px; }
+  .tabs { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+  .tab {
+    background: var(--panel); border: 1px solid var(--border); color: var(--muted);
+    padding: 7px 14px; border-radius: 999px; cursor: pointer; font-size: 13px; font-weight: 600;
+  }
+  .tab.active { background: var(--accent); color: #06121f; border-color: var(--accent); }
+  .tab:hover:not(.active) { color: var(--text); border-color: var(--accent); }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 22px 20px 80px; }
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* Progress bar */
+  .progress-wrap { margin: 6px 0 22px; }
+  .progress-track { height: 8px; background: var(--panel-2); border-radius: 999px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); width: 0%; transition: width .3s; }
+  .progress-label { color: var(--muted); font-size: 12px; margin-top: 6px; }
+
+  /* Pattern grid */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 16px; cursor: pointer; transition: transform .12s, border-color .12s; position: relative;
+  }
+  .card:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .card .icon { font-size: 22px; }
+  .card h3 { margin: 8px 0 4px; font-size: 16px; }
+  .card .tagline { color: var(--muted); font-size: 13px; min-height: 38px; }
+  .card .meta { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .pill { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); }
+  .pill.freq-high { color: var(--accent-2); border-color: #2c5b3a; background: #11331f; }
+  .pill.freq-med { color: var(--warn); border-color: #5a4d1e; background: #2e2810; }
+  .pill.freq-low { color: var(--muted); }
+  .card .check { position: absolute; top: 14px; right: 14px; font-size: 18px; color: var(--accent-2); opacity: 0; }
+  .card.learned .check { opacity: 1; }
+  .card.learned { border-color: #2c5b3a; }
+
+  /* Detail / modal */
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: none; z-index: 100; }
+  .overlay.open { display: block; }
+  .drawer {
+    position: fixed; top: 0; right: 0; height: 100%; width: min(760px, 100%);
+    background: var(--bg); border-left: 1px solid var(--border); z-index: 101;
+    transform: translateX(100%); transition: transform .25s ease; overflow-y: auto;
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer-inner { padding: 24px 28px 60px; }
+  .drawer .closex { position: sticky; top: 0; float: right; background: var(--panel); border: 1px solid var(--border);
+    color: var(--text); border-radius: 8px; width: 34px; height: 34px; cursor: pointer; font-size: 18px; }
+  .drawer h2 { margin: 4px 0 2px; font-size: 24px; }
+  .section-title { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: var(--accent); margin: 26px 0 8px; font-weight: 700; }
+  .cue-list, .pitfall-list { margin: 0; padding-left: 0; list-style: none; }
+  .cue-list li { padding: 7px 12px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 6px; }
+  .cue-list li b { color: var(--accent-2); }
+  .pitfall-list li { padding: 7px 12px 7px 30px; position: relative; color: var(--text); margin-bottom: 6px; }
+  .pitfall-list li::before { content: "⚠"; position: absolute; left: 8px; color: var(--warn); }
+  pre.code {
+    background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; overflow-x: auto; font-size: 13px; line-height: 1.55; margin: 8px 0;
+  }
+  pre.code .cm { color: var(--muted); }
+  pre.code .kw { color: #ff7b72; }
+  pre.code .fn { color: #d2a8ff; }
+  pre.code .str { color: #a5d6ff; }
+  .complexity { display: inline-block; background: var(--panel-2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 6px 12px; font-size: 13px; margin-right: 8px; }
+  .complexity b { color: var(--accent-2); }
+  .prob-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border: 1px solid var(--border);
+    border-radius: 8px; margin-bottom: 6px; background: var(--panel); }
+  .prob-row .d { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+  .d.easy { background: #11331f; color: var(--accent-2); }
+  .d.med { background: #2e2810; color: var(--warn); }
+  .d.hard { background: #331515; color: var(--danger); }
+  .prob-row .num { color: var(--muted); font-size: 12px; min-width: 38px; }
+  .btn { background: var(--accent); color: #06121f; border: none; padding: 10px 18px; border-radius: 8px;
+    font-weight: 700; cursor: pointer; font-size: 14px; }
+  .btn.ghost { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn:hover { opacity: .9; }
+  .drawer-actions { display: flex; gap: 10px; margin-top: 28px; }
+
+  /* Identify / decision view */
+  .id-step { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 12px; }
+  .id-step h4 { margin: 0 0 6px; color: var(--accent); }
+  .id-step .ask { color: var(--text); font-weight: 600; }
+  .id-step .then { color: var(--muted); font-size: 14px; }
+  .id-step .then b { color: var(--accent-2); }
+
+  /* Quiz */
+  .quiz-card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; max-width: 760px; margin: 0 auto; }
+  .quiz-prompt { font-size: 16px; line-height: 1.6; margin-bottom: 18px; }
+  .quiz-opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px,1fr)); gap: 8px; }
+  .quiz-opt { text-align: left; background: var(--panel-2); border: 1px solid var(--border); color: var(--text);
+    padding: 10px 14px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; }
+  .quiz-opt:hover { border-color: var(--accent); }
+  .quiz-opt.correct { background: #11331f; border-color: var(--accent-2); color: var(--accent-2); }
+  .quiz-opt.wrong { background: #331515; border-color: var(--danger); color: var(--danger); }
+  .quiz-feedback { margin-top: 16px; padding: 14px; border-radius: 8px; background: var(--panel-2); border: 1px solid var(--border); display: none; }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback b { color: var(--accent-2); }
+  .quiz-meta { display: flex; justify-content: space-between; color: var(--muted); font-size: 13px; margin-bottom: 14px; }
+  .quiz-score b { color: var(--accent-2); }
+  .intro { color: var(--muted); max-width: 760px; margin-bottom: 20px; }
+  .filters { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .filter-btn { background: var(--panel); border: 1px solid var(--border); color: var(--muted); padding: 6px 12px;
+    border-radius: 999px; cursor: pointer; font-size: 12px; font-weight: 600; }
+  .filter-btn.active { background: var(--panel-2); color: var(--text); border-color: var(--accent); }
+  .reset-link { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 12px; text-decoration: underline; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>⚡ LeetCode Patterns Trainer</h1>
+    <div class="sub">JavaScript · learn the ~16 patterns that cover nearly every problem</div>
+  </div>
+  <nav class="tabs">
+    <button class="tab active" data-view="patterns">Patterns</button>
+    <button class="tab" data-view="identify">How to Identify</button>
+    <button class="tab" data-view="quiz">Recognition Quiz</button>
+    <button class="tab" data-view="plan">Study Plan</button>
+  </nav>
+</header>
+
+<div class="wrap">
+  <!-- PATTERNS -->
+  <section id="view-patterns" class="view active">
+    <div class="progress-wrap">
+      <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
+      <div class="progress-label"><span id="progLabel">0 / 16 patterns marked learned</span> · <button class="reset-link" id="resetProg">reset progress</button></div>
+    </div>
+    <div class="filters" id="freqFilters">
+      <button class="filter-btn active" data-freq="all">All</button>
+      <button class="filter-btn" data-freq="high">🔥 High frequency</button>
+      <button class="filter-btn" data-freq="med">Medium</button>
+      <button class="filter-btn" data-freq="low">Foundational</button>
+    </div>
+    <div class="grid" id="patternGrid"></div>
+  </section>
+
+  <!-- IDENTIFY -->
+  <section id="view-identify" class="view">
+    <p class="intro">The hardest part isn't coding the pattern — it's knowing <i>which</i> one to reach for. Read the problem, then walk this checklist top to bottom. The first match is almost always right.</p>
+    <div id="identifyList"></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="view-quiz" class="view">
+    <p class="intro">You'll get a problem description. Pick the pattern you'd use. This trains the single most valuable interview skill: pattern recognition under pressure.</p>
+    <div class="quiz-card">
+      <div class="quiz-meta">
+        <span class="quiz-score">Score: <b id="quizScore">0</b> / <span id="quizTotal">0</span></span>
+        <span>Question <span id="quizNum">1</span></span>
+      </div>
+      <div class="quiz-prompt" id="quizPrompt"></div>
+      <div class="quiz-opts" id="quizOpts"></div>
+      <div class="quiz-feedback" id="quizFeedback"></div>
+      <div style="margin-top:18px; display:flex; gap:10px;">
+        <button class="btn" id="quizNext" style="display:none;">Next question →</button>
+        <button class="btn ghost" id="quizRestart">Shuffle &amp; restart</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAN -->
+  <section id="view-plan" class="view">
+    <p class="intro">A realistic order to learn these if you're starting fresh. Each tier builds on the last. Mark patterns learned on the Patterns tab as you go.</p>
+    <div id="planList"></div>
+  </section>
+</div>
+
+<!-- Drawer -->
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer"><div class="drawer-inner" id="drawerInner"></div></aside>
+
+<script>
+/* ============================================================
+   DATA — all 16 patterns
+   ============================================================ */
+const PATTERNS = [
+  {
+    id: "two-pointers", name: "Two Pointers", icon: "↔️", freq: "high", tier: 1,
+    tagline: "Two indices moving through a (usually sorted) array to avoid nested loops.",
+    explain: "You keep two indices into the array and move them based on a condition. Classic setups: one pointer at each end moving inward (for sorted arrays / pair sums / palindromes), or both starting at the front and moving at different speeds. It turns many O(n²) brute-force scans into a single O(n) pass.",
+    cues: [
+      "Array is <b>sorted</b> (or can be sorted) and you need a pair/triplet that meets a target",
+      "Keywords: <b>'pair sums to'</b>, <b>'palindrome'</b>, <b>'reverse in place'</b>, <b>'remove duplicates'</b>",
+      "You want O(1) extra space and the brute force is checking every pair"
+    ],
+    complexity: "Time <b>O(n)</b> (or O(n²) for triplets) · Space <b>O(1)</b>",
+    template:
+`function twoPointers(arr, target) {
+  let l = 0, r = arr.length - 1;   // start at both ends
+  while (l < r) {
+    const sum = arr[l] + arr[r];
+    if (sum === target) return [l, r];
+    if (sum < target) l++;          // need bigger -> move left up
+    else r--;                       // need smaller -> move right down
+  }
+  return [-1, -1];
+}`,
+    example: {
+      problem: "Two Sum II (input sorted) — return indices of two numbers adding to target.",
+      idea: "Because it's sorted, a too-small sum means move the left pointer right; too-big means move right pointer left.",
+      code:
+`function twoSum(numbers, target) {
+  let l = 0, r = numbers.length - 1;
+  while (l < r) {
+    const s = numbers[l] + numbers[r];
+    if (s === target) return [l + 1, r + 1];
+    s < target ? l++ : r--;
+  }
+}`
+    },
+    pitfalls: [
+      "Forgetting the array must be sorted for the converging-pointers trick",
+      "Off-by-one in the while condition (l < r vs l <= r)",
+      "For triplets (3Sum): skip duplicate values to avoid repeat answers"
+    ],
+    problems: [
+      { num: 167, name: "Two Sum II", d: "easy" },
+      { num: 125, name: "Valid Palindrome", d: "easy" },
+      { num: 15, name: "3Sum", d: "med" },
+      { num: 11, name: "Container With Most Water", d: "med" },
+      { num: 42, name: "Trapping Rain Water", d: "hard" }
+    ]
+  },
+  {
+    id: "sliding-window", name: "Sliding Window", icon: "🪟", freq: "high", tier: 1,
+    tagline: "A moving window over a contiguous subarray/substring you grow and shrink.",
+    explain: "Maintain a window [left, right] over the array/string. Expand the right edge to include new elements; when the window violates a constraint, shrink from the left. You track a running quantity (sum, count, char frequencies) so you never recompute the whole window. Perfect for 'longest/shortest/max/min contiguous ___' problems.",
+    cues: [
+      "Keywords: <b>'contiguous'</b>, <b>'subarray'</b>, <b>'substring'</b>, <b>'longest/shortest/max/min window'</b>",
+      "You're asked about a run of consecutive elements meeting a condition",
+      "Brute force would re-scan every subarray — O(n²) or worse"
+    ],
+    complexity: "Time <b>O(n)</b> · Space <b>O(k)</b> for the window contents",
+    template:
+`function slidingWindow(s) {
+  let left = 0, best = 0;
+  const window = new Map();        // state for current window
+  for (let right = 0; right < s.length; right++) {
+    // 1. add s[right] to the window
+    window.set(s[right], (window.get(s[right]) || 0) + 1);
+    // 2. while window is invalid, shrink from the left
+    while (/* invalid */ false) {
+      window.set(s[left], window.get(s[left]) - 1);
+      left++;
+    }
+    // 3. window is valid -> update answer
+    best = Math.max(best, right - left + 1);
+  }
+  return best;
+}`,
+    example: {
+      problem: "Longest Substring Without Repeating Characters.",
+      idea: "Grow the window; if the new char is already inside, shrink from the left until it's unique again.",
+      code:
+`function lengthOfLongestSubstring(s) {
+  const seen = new Set();
+  let left = 0, best = 0;
+  for (let right = 0; right < s.length; right++) {
+    while (seen.has(s[right])) { seen.delete(s[left]); left++; }
+    seen.add(s[right]);
+    best = Math.max(best, right - left + 1);
+  }
+  return best;
+}`
+    },
+    pitfalls: [
+      "Shrinking with 'if' instead of 'while' when multiple removals are needed",
+      "Updating the answer before the window is valid again",
+      "Fixed-size windows: remember to remove the element leaving the window"
+    ],
+    problems: [
+      { num: 3, name: "Longest Substring Without Repeating Chars", d: "med" },
+      { num: 643, name: "Maximum Average Subarray I", d: "easy" },
+      { num: 76, name: "Minimum Window Substring", d: "hard" },
+      { num: 424, name: "Longest Repeating Char Replacement", d: "med" },
+      { num: 567, name: "Permutation in String", d: "med" }
+    ]
+  },
+  {
+    id: "hash-map", name: "Hash Map / Set", icon: "🗂️", freq: "high", tier: 1,
+    tagline: "Trade memory for speed: O(1) lookups to remember what you've seen.",
+    explain: "A hash map (object/Map) or set gives near-constant-time lookups. The core trick: as you scan, store something you've seen (a value, an index, a count, a complement) so a future element can be matched instantly instead of via a nested loop. This is the single most common way to turn O(n²) into O(n).",
+    cues: [
+      "Keywords: <b>'have I seen'</b>, <b>'count of'</b>, <b>'frequency'</b>, <b>'duplicate'</b>, <b>'group by'</b>",
+      "You need to look something up by key while iterating",
+      "Anagrams, complements (target − x), or counting occurrences"
+    ],
+    complexity: "Time <b>O(n)</b> · Space <b>O(n)</b>",
+    template:
+`function withMap(arr) {
+  const seen = new Map();          // value/key -> index/count
+  for (let i = 0; i < arr.length; i++) {
+    if (seen.has(/* something derived from arr[i] */ arr[i])) {
+      // found a match — use it
+    }
+    seen.set(arr[i], i);           // remember current
+  }
+}`,
+    example: {
+      problem: "Two Sum (unsorted) — indices of two numbers adding to target.",
+      idea: "For each number, check if its complement (target − num) was already seen. Store each number's index as you go.",
+      code:
+`function twoSum(nums, target) {
+  const seen = new Map();
+  for (let i = 0; i < nums.length; i++) {
+    const need = target - nums[i];
+    if (seen.has(need)) return [seen.get(need), i];
+    seen.set(nums[i], i);
+  }
+}`
+    },
+    pitfalls: [
+      "Using a plain object when keys could collide with prototype props — prefer Map",
+      "Storing the value when you actually need the index (or vice versa)",
+      "Checking 'seen' AFTER inserting current element (matches itself)"
+    ],
+    problems: [
+      { num: 1, name: "Two Sum", d: "easy" },
+      { num: 242, name: "Valid Anagram", d: "easy" },
+      { num: 49, name: "Group Anagrams", d: "med" },
+      { num: 347, name: "Top K Frequent Elements", d: "med" },
+      { num: 128, name: "Longest Consecutive Sequence", d: "med" }
+    ]
+  },
+  {
+    id: "binary-search", name: "Binary Search", icon: "🎯", freq: "high", tier: 2,
+    tagline: "Halve the search space each step on anything sorted or monotonic.",
+    explain: "When data is sorted — or the answer space is monotonic ('does X work? if yes, does X−1 also work?') — you can repeatedly cut the candidates in half. Beyond plain 'find the value in a sorted array', the powerful version is 'binary search on the answer': guess a value, check feasibility, move the boundary. O(log n) instead of O(n).",
+    cues: [
+      "Array is <b>sorted</b>, or rotated-sorted",
+      "Keywords: <b>'minimize the maximum'</b>, <b>'smallest value such that…'</b>, <b>'find boundary'</b>",
+      "Brute force is O(n) over a sorted/monotonic space and n is large"
+    ],
+    complexity: "Time <b>O(log n)</b> · Space <b>O(1)</b>",
+    template:
+`function binarySearch(arr, target) {
+  let lo = 0, hi = arr.length - 1;
+  while (lo <= hi) {
+    const mid = lo + ((hi - lo) >> 1);   // avoid overflow
+    if (arr[mid] === target) return mid;
+    if (arr[mid] < target) lo = mid + 1;
+    else hi = mid - 1;
+  }
+  return -1;                             // or 'lo' for insert position
+}`,
+    example: {
+      problem: "Find Minimum in Rotated Sorted Array.",
+      idea: "Compare mid to the right end to decide which half is sorted, then shrink toward the unsorted (pivot) side.",
+      code:
+`function findMin(nums) {
+  let lo = 0, hi = nums.length - 1;
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1;
+    if (nums[mid] > nums[hi]) lo = mid + 1;
+    else hi = mid;
+  }
+  return nums[lo];
+}`
+    },
+    pitfalls: [
+      "Infinite loops from wrong mid/boundary updates — pick a template and stick to it",
+      "lo <= hi vs lo < hi — depends on whether you converge or return mid",
+      "Integer mid overflow (less of an issue in JS, but use lo + (hi-lo)/2 habit)"
+    ],
+    problems: [
+      { num: 704, name: "Binary Search", d: "easy" },
+      { num: 153, name: "Find Min in Rotated Sorted Array", d: "med" },
+      { num: 33, name: "Search in Rotated Sorted Array", d: "med" },
+      { num: 875, name: "Koko Eating Bananas", d: "med" },
+      { num: 4, name: "Median of Two Sorted Arrays", d: "hard" }
+    ]
+  },
+  {
+    id: "dfs", name: "DFS (Trees & Graphs)", icon: "🌳", freq: "high", tier: 2,
+    tagline: "Go as deep as possible, then backtrack — usually via recursion.",
+    explain: "Depth-first search explores one branch fully before trying the next, naturally expressed with recursion (the call stack does the bookkeeping). On trees it powers traversals (preorder/inorder/postorder), path sums, and height/diameter. On graphs you add a 'visited' set to avoid cycles. If a problem is about a tree or 'explore all reachable cells/nodes', DFS is the default.",
+    cues: [
+      "Input is a <b>tree</b> or <b>graph</b>; you must visit nodes/cells",
+      "Keywords: <b>'path'</b>, <b>'connected'</b>, <b>'islands'</b>, <b>'all nodes'</b>, tree depth",
+      "You need to explore every branch / reach everything from a start"
+    ],
+    complexity: "Time <b>O(V + E)</b> (or O(n) on a tree) · Space <b>O(h)</b> recursion stack",
+    template:
+`function dfs(node, visited = new Set()) {
+  if (!node || visited.has(node)) return;
+  visited.add(node);
+  // process node here (preorder)
+  for (const next of neighbors(node)) {
+    dfs(next, visited);
+  }
+}
+// Tree version:
+function dfsTree(node) {
+  if (!node) return;
+  dfsTree(node.left);
+  dfsTree(node.right);
+}`,
+    example: {
+      problem: "Number of Islands — count connected groups of '1' in a grid.",
+      idea: "Scan cells; each unvisited '1' starts a DFS that sinks the whole island so it's only counted once.",
+      code:
+`function numIslands(grid) {
+  let count = 0;
+  const sink = (r, c) => {
+    if (r<0||c<0||r>=grid.length||c>=grid[0].length||grid[r][c]!=='1') return;
+    grid[r][c] = '0';
+    sink(r+1,c); sink(r-1,c); sink(r,c+1); sink(r,c-1);
+  };
+  for (let r=0;r<grid.length;r++)
+    for (let c=0;c<grid[0].length;c++)
+      if (grid[r][c]==='1') { count++; sink(r,c); }
+  return count;
+}`
+    },
+    pitfalls: [
+      "Forgetting the visited set on graphs → infinite loops",
+      "Deep recursion can hit the call-stack limit; consider an explicit stack",
+      "Processing the node at the wrong time (pre vs post order matters)"
+    ],
+    problems: [
+      { num: 104, name: "Max Depth of Binary Tree", d: "easy" },
+      { num: 200, name: "Number of Islands", d: "med" },
+      { num: 133, name: "Clone Graph", d: "med" },
+      { num: 124, name: "Binary Tree Max Path Sum", d: "hard" },
+      { num: 543, name: "Diameter of Binary Tree", d: "easy" }
+    ]
+  },
+  {
+    id: "bfs", name: "BFS / Shortest Path", icon: "🌊", freq: "high", tier: 2,
+    tagline: "Explore level by level with a queue — finds shortest path in unweighted graphs.",
+    explain: "Breadth-first search visits all nodes at distance 1, then distance 2, and so on, using a queue. Because it expands outward in rings, the first time it reaches a target it has used the fewest edges — so BFS gives the shortest path in unweighted graphs/grids. Also the tool for level-order tree traversal and 'minimum number of steps' problems.",
+    cues: [
+      "Keywords: <b>'shortest path'</b>, <b>'minimum steps/moves'</b>, <b>'level by level'</b>, <b>'fewest'</b>",
+      "Unweighted graph or grid where each move costs the same",
+      "Level-order traversal of a tree"
+    ],
+    complexity: "Time <b>O(V + E)</b> · Space <b>O(V)</b> for the queue + visited",
+    template:
+`function bfs(start) {
+  const queue = [start];
+  const visited = new Set([start]);
+  let steps = 0;
+  while (queue.length) {
+    const size = queue.length;          // freeze current level
+    for (let i = 0; i < size; i++) {
+      const node = queue.shift();
+      // if (node === target) return steps;
+      for (const next of neighbors(node)) {
+        if (!visited.has(next)) { visited.add(next); queue.push(next); }
+      }
+    }
+    steps++;                            // finished a level
+  }
+}`,
+    example: {
+      problem: "Binary Tree Level Order Traversal.",
+      idea: "Process the queue one level at a time by snapshotting its size before the inner loop.",
+      code:
+`function levelOrder(root) {
+  if (!root) return [];
+  const res = [], q = [root];
+  while (q.length) {
+    const level = [], size = q.length;
+    for (let i = 0; i < size; i++) {
+      const n = q.shift();
+      level.push(n.val);
+      if (n.left) q.push(n.left);
+      if (n.right) q.push(n.right);
+    }
+    res.push(level);
+  }
+  return res;
+}`
+    },
+    pitfalls: [
+      "Marking visited when popping instead of when pushing → duplicates in queue",
+      "Forgetting to snapshot level size when you need per-level grouping",
+      "Using array.shift() on huge inputs is O(n); use a head index or deque for perf"
+    ],
+    problems: [
+      { num: 102, name: "Binary Tree Level Order Traversal", d: "med" },
+      { num: 994, name: "Rotting Oranges", d: "med" },
+      { num: 127, name: "Word Ladder", d: "hard" },
+      { num: 1091, name: "Shortest Path in Binary Matrix", d: "med" },
+      { num: 286, name: "Walls and Gates", d: "med" }
+    ]
+  },
+  {
+    id: "backtracking", name: "Backtracking", icon: "🔙", freq: "high", tier: 3,
+    tagline: "Build candidates incrementally; undo a choice when it can't lead to a solution.",
+    explain: "Backtracking is DFS over the space of partial solutions. You make a choice, recurse, then undo it ('backtrack') to try the next option. It's the go-to for generating all combinations/permutations/subsets and for constraint puzzles (N-Queens, Sudoku). Pruning invalid branches early is what keeps it tractable.",
+    cues: [
+      "Keywords: <b>'all combinations/permutations/subsets'</b>, <b>'generate every'</b>, <b>'partition'</b>",
+      "You must enumerate the full solution space, not just count or optimize",
+      "Constraint puzzles: place items subject to rules (queens, board fill)"
+    ],
+    complexity: "Time <b>O(branch^depth)</b> — exponential · Space <b>O(depth)</b>",
+    template:
+`function backtrack(start, path, res, nums) {
+  res.push([...path]);                 // record (for subsets)
+  for (let i = start; i < nums.length; i++) {
+    path.push(nums[i]);                // choose
+    backtrack(i + 1, path, res, nums); // explore
+    path.pop();                        // un-choose (backtrack)
+  }
+}`,
+    example: {
+      problem: "Subsets — return all possible subsets of a number array.",
+      idea: "At each index decide include/skip; the recursion tree enumerates every subset. Copy the path when recording.",
+      code:
+`function subsets(nums) {
+  const res = [];
+  const go = (start, path) => {
+    res.push([...path]);
+    for (let i = start; i < nums.length; i++) {
+      path.push(nums[i]);
+      go(i + 1, path);
+      path.pop();
+    }
+  };
+  go(0, []);
+  return res;
+}`
+    },
+    pitfalls: [
+      "Pushing the path reference instead of a copy ([...path]) — all results mutate together",
+      "Forgetting to undo the choice (path.pop) before the next iteration",
+      "Not pruning / skipping duplicates → exponential blowup or repeated answers"
+    ],
+    problems: [
+      { num: 78, name: "Subsets", d: "med" },
+      { num: 46, name: "Permutations", d: "med" },
+      { num: 39, name: "Combination Sum", d: "med" },
+      { num: 51, name: "N-Queens", d: "hard" },
+      { num: 79, name: "Word Search", d: "med" }
+    ]
+  },
+  {
+    id: "dynamic-programming", name: "Dynamic Programming", icon: "🧩", freq: "high", tier: 4,
+    tagline: "Break into overlapping subproblems; cache results so each is solved once.",
+    explain: "DP applies when a problem has (1) optimal substructure — the answer is built from answers to smaller versions — and (2) overlapping subproblems — the same sub-answers recur. You define a state, a recurrence relating states, and base cases. Solve top-down (recursion + memo) or bottom-up (fill a table). This is the broadest, hardest family: counting paths, max/min cost, can-you-reach, edit distance, knapsack.",
+    cues: [
+      "Keywords: <b>'number of ways'</b>, <b>'min/max cost'</b>, <b>'can you reach/make'</b>, <b>'longest/shortest'</b>",
+      "Greedy gives wrong answers because a local choice affects future options",
+      "You can phrase the answer in terms of smaller subproblems (n depends on n−1, n−2…)"
+    ],
+    complexity: "Time <b>O(states × transition)</b> · Space <b>O(states)</b> (often reducible)",
+    template:
+`// Top-down (memoized recursion)
+function solve(i, memo = new Map()) {
+  if (/* base case */ i <= 0) return baseValue;
+  if (memo.has(i)) return memo.get(i);
+  const ans = /* combine */ Math.min(solve(i-1, memo), solve(i-2, memo)) + cost[i];
+  memo.set(i, ans);
+  return ans;
+}
+// Bottom-up (tabulation)
+function solveDP(n) {
+  const dp = new Array(n + 1).fill(0);
+  dp[0] = base0; dp[1] = base1;
+  for (let i = 2; i <= n; i++) dp[i] = dp[i-1] + dp[i-2];
+  return dp[n];
+}`,
+    example: {
+      problem: "Climbing Stairs — count distinct ways to climb n steps taking 1 or 2 at a time.",
+      idea: "Ways to reach step i = ways to reach i−1 plus ways to reach i−2. It's Fibonacci. Two rolling variables suffice.",
+      code:
+`function climbStairs(n) {
+  let a = 1, b = 1;          // ways to reach step 0 and 1
+  for (let i = 2; i <= n; i++) {
+    const next = a + b;
+    a = b; b = next;
+  }
+  return b;
+}`
+    },
+    pitfalls: [
+      "Wrong state definition — if you can't write the recurrence, the state is off",
+      "Missing or incorrect base cases",
+      "Iterating the table in an order where dependencies aren't ready yet"
+    ],
+    problems: [
+      { num: 70, name: "Climbing Stairs", d: "easy" },
+      { num: 198, name: "House Robber", d: "med" },
+      { num: 322, name: "Coin Change", d: "med" },
+      { num: 1143, name: "Longest Common Subsequence", d: "med" },
+      { num: 72, name: "Edit Distance", d: "hard" }
+    ]
+  },
+  {
+    id: "heap", name: "Heap / Priority Queue", icon: "🔺", freq: "high", tier: 3,
+    tagline: "Always pull the smallest/largest next — top-K and streaming problems.",
+    explain: "A heap keeps the min (or max) element accessible in O(1) and supports insert/extract in O(log n). Reach for it when you repeatedly need 'the next best' element: top-K largest/smallest, merging k sorted lists, scheduling, or running medians. In JS there's no built-in heap, so you implement a small binary heap or simulate with sorted structures.",
+    cues: [
+      "Keywords: <b>'top K'</b>, <b>'K largest/smallest/closest'</b>, <b>'merge K'</b>, <b>'median of a stream'</b>",
+      "You need repeated min/max extraction, not a one-time sort",
+      "A full sort is O(n log n) but you only need the K best → heap is O(n log k)"
+    ],
+    complexity: "push/pop <b>O(log n)</b> · peek <b>O(1)</b> · top-K <b>O(n log k)</b>",
+    template:
+`class MinHeap {
+  constructor() { this.h = []; }
+  push(v) { this.h.push(v); this._up(this.h.length - 1); }
+  pop() {
+    const top = this.h[0], last = this.h.pop();
+    if (this.h.length) { this.h[0] = last; this._down(0); }
+    return top;
+  }
+  peek() { return this.h[0]; }
+  _up(i){ while(i>0){const p=(i-1)>>1; if(this.h[p]<=this.h[i])break;
+    [this.h[p],this.h[i]]=[this.h[i],this.h[p]]; i=p;} }
+  _down(i){const n=this.h.length; while(true){let s=i,l=2*i+1,r=2*i+2;
+    if(l<n&&this.h[l]<this.h[s])s=l; if(r<n&&this.h[r]<this.h[s])s=r;
+    if(s===i)break; [this.h[s],this.h[i]]=[this.h[i],this.h[s]]; i=s;}}
+}`,
+    example: {
+      problem: "Kth Largest Element in an Array.",
+      idea: "Keep a min-heap of size k. The smallest of the k biggest sits on top, so after processing all, the root is the kth largest.",
+      code:
+`function findKthLargest(nums, k) {
+  const heap = new MinHeap();
+  for (const n of nums) {
+    heap.push(n);
+    if (heap.h.length > k) heap.pop();   // drop the smallest
+  }
+  return heap.peek();
+}`
+    },
+    pitfalls: [
+      "Using array.sort() repeatedly inside a loop instead of a real heap (O(n² log n))",
+      "Min-heap vs max-heap confusion for top-K (use a MIN heap of size k for K LARGEST)",
+      "Comparator bugs when heapifying objects (store [priority, value] pairs)"
+    ],
+    problems: [
+      { num: 215, name: "Kth Largest Element", d: "med" },
+      { num: 347, name: "Top K Frequent Elements", d: "med" },
+      { num: 23, name: "Merge k Sorted Lists", d: "hard" },
+      { num: 295, name: "Find Median from Data Stream", d: "hard" },
+      { num: 973, name: "K Closest Points to Origin", d: "med" }
+    ]
+  },
+  {
+    id: "intervals", name: "Intervals", icon: "📏", freq: "med", tier: 3,
+    tagline: "Sort by start/end, then sweep — merging and scheduling problems.",
+    explain: "Interval problems give you ranges [start, end] and ask you to merge overlaps, count conflicts, or fit a schedule. The universal first move is to sort (usually by start). Then a single sweep lets you compare each interval to the last kept/active one to detect overlap (current.start <= prev.end). Many reduce to a greedy choice after sorting.",
+    cues: [
+      "Input is a list of <b>[start, end]</b> ranges",
+      "Keywords: <b>'merge'</b>, <b>'overlap'</b>, <b>'meeting rooms'</b>, <b>'schedule'</b>, <b>'insert interval'</b>",
+      "You care about which ranges collide or how to pack them"
+    ],
+    complexity: "Time <b>O(n log n)</b> (the sort dominates) · Space <b>O(n)</b>",
+    template:
+`function mergeIntervals(intervals) {
+  intervals.sort((a, b) => a[0] - b[0]);   // sort by start
+  const res = [intervals[0]];
+  for (let i = 1; i < intervals.length; i++) {
+    const last = res[res.length - 1];
+    if (intervals[i][0] <= last[1]) {       // overlap
+      last[1] = Math.max(last[1], intervals[i][1]);
+    } else {
+      res.push(intervals[i]);               // disjoint
+    }
+  }
+  return res;
+}`,
+    example: {
+      problem: "Merge Intervals — combine all overlapping intervals.",
+      idea: "Sort by start; if the next interval starts before the current one ends, extend the current end, else start a new block.",
+      code:
+`function merge(intervals) {
+  intervals.sort((a,b) => a[0]-b[0]);
+  const out = [intervals[0]];
+  for (const [s,e] of intervals.slice(1)) {
+    const last = out[out.length-1];
+    if (s <= last[1]) last[1] = Math.max(last[1], e);
+    else out.push([s,e]);
+  }
+  return out;
+}`
+    },
+    pitfalls: [
+      "Forgetting to sort first — everything downstream breaks",
+      "Sorting by the wrong key (start vs end) for the specific question",
+      "Edge case: touching intervals [1,2],[2,3] — decide if that counts as overlap"
+    ],
+    problems: [
+      { num: 56, name: "Merge Intervals", d: "med" },
+      { num: 57, name: "Insert Interval", d: "med" },
+      { num: 252, name: "Meeting Rooms", d: "easy" },
+      { num: 253, name: "Meeting Rooms II", d: "med" },
+      { num: 435, name: "Non-overlapping Intervals", d: "med" }
+    ]
+  },
+  {
+    id: "linked-list", name: "Linked List", icon: "🔗", freq: "med", tier: 2,
+    tagline: "Pointer surgery: fast/slow pointers, reversal, dummy heads.",
+    explain: "Linked-list problems are about manipulating next-pointers without breaking the chain. Core techniques: the dummy/sentinel head (simplifies edge cases at the front), fast & slow pointers (cycle detection, finding the middle), and in-place reversal. The challenge is rarely the algorithm — it's not losing a node while rewiring pointers.",
+    cues: [
+      "Input is a <b>linked list</b> (ListNode with .next)",
+      "Keywords: <b>'reverse'</b>, <b>'cycle'</b>, <b>'middle'</b>, <b>'nth from end'</b>, <b>'merge two lists'</b>",
+      "Fast/slow pointer hints: detect a loop, find midpoint in one pass"
+    ],
+    complexity: "Time <b>O(n)</b> · Space <b>O(1)</b> (in-place pointer work)",
+    template:
+`// Reverse a linked list
+function reverse(head) {
+  let prev = null, cur = head;
+  while (cur) {
+    const next = cur.next;   // save
+    cur.next = prev;         // flip
+    prev = cur;              // advance
+    cur = next;
+  }
+  return prev;
+}
+// Fast/slow for middle or cycle
+function middle(head) {
+  let slow = head, fast = head;
+  while (fast && fast.next) { slow = slow.next; fast = fast.next.next; }
+  return slow;
+}`,
+    example: {
+      problem: "Linked List Cycle — detect whether the list loops.",
+      idea: "Floyd's tortoise & hare: a fast pointer moving 2x will lap a slow pointer if and only if there's a cycle.",
+      code:
+`function hasCycle(head) {
+  let slow = head, fast = head;
+  while (fast && fast.next) {
+    slow = slow.next;
+    fast = fast.next.next;
+    if (slow === fast) return true;
+  }
+  return false;
+}`
+    },
+    pitfalls: [
+      "Losing the rest of the list by overwriting .next before saving it",
+      "Null-pointer crashes — guard fast && fast.next",
+      "Not using a dummy head when the head itself might be removed/changed"
+    ],
+    problems: [
+      { num: 206, name: "Reverse Linked List", d: "easy" },
+      { num: 141, name: "Linked List Cycle", d: "easy" },
+      { num: 21, name: "Merge Two Sorted Lists", d: "easy" },
+      { num: 19, name: "Remove Nth Node From End", d: "med" },
+      { num: 146, name: "LRU Cache", d: "med" }
+    ]
+  },
+  {
+    id: "stack", name: "Stack / Monotonic Stack", icon: "📚", freq: "med", tier: 2,
+    tagline: "LIFO bookkeeping — matching, parsing, and next-greater-element.",
+    explain: "A stack handles 'most recent unmatched thing' problems: balanced parentheses, expression parsing, undo. The advanced flavor is the monotonic stack — you keep the stack sorted (increasing or decreasing) by popping elements that violate the order. That pattern solves 'next greater/smaller element' and many histogram/temperature problems in O(n).",
+    cues: [
+      "Keywords: <b>'valid parentheses'</b>, <b>'next greater/warmer'</b>, <b>'nearest smaller'</b>, <b>'evaluate expression'</b>",
+      "You repeatedly need the most recently seen unmatched item",
+      "Histogram / 'largest rectangle' / daily temperatures → monotonic stack"
+    ],
+    complexity: "Time <b>O(n)</b> (each element pushed/popped once) · Space <b>O(n)</b>",
+    template:
+`// Monotonic stack: next greater element
+function nextGreater(nums) {
+  const res = new Array(nums.length).fill(-1);
+  const stack = [];                       // holds indices, decreasing values
+  for (let i = 0; i < nums.length; i++) {
+    while (stack.length && nums[stack[stack.length-1]] < nums[i]) {
+      res[stack.pop()] = nums[i];         // current is the answer for popped
+    }
+    stack.push(i);
+  }
+  return res;
+}`,
+    example: {
+      problem: "Valid Parentheses — check if brackets are correctly matched/nested.",
+      idea: "Push opening brackets; on a closing bracket the top must be its matching opener, else invalid.",
+      code:
+`function isValid(s) {
+  const pairs = { ')':'(', ']':'[', '}':'{' };
+  const stack = [];
+  for (const ch of s) {
+    if (ch in pairs) {
+      if (stack.pop() !== pairs[ch]) return false;
+    } else stack.push(ch);
+  }
+  return stack.length === 0;
+}`
+    },
+    pitfalls: [
+      "Returning true while the stack is non-empty (unclosed openers)",
+      "Monotonic stack: storing values when you need indices for distances",
+      "Wrong order direction (increasing vs decreasing) for the specific question"
+    ],
+    problems: [
+      { num: 20, name: "Valid Parentheses", d: "easy" },
+      { num: 739, name: "Daily Temperatures", d: "med" },
+      { num: 155, name: "Min Stack", d: "med" },
+      { num: 84, name: "Largest Rectangle in Histogram", d: "hard" },
+      { num: 853, name: "Car Fleet", d: "med" }
+    ]
+  },
+  {
+    id: "trie", name: "Trie (Prefix Tree)", icon: "🌲", freq: "low", tier: 4,
+    tagline: "A tree keyed by characters — fast prefix and word lookups.",
+    explain: "A trie stores strings character by character down a tree, so words sharing a prefix share a path. Lookups, inserts, and prefix queries run in O(word length) regardless of how many words are stored. Reach for it on autocomplete, spell-check, prefix matching, and word-search-on-a-board problems where many candidate words share prefixes.",
+    cues: [
+      "Keywords: <b>'prefix'</b>, <b>'starts with'</b>, <b>'autocomplete'</b>, <b>'dictionary of words'</b>",
+      "Many string lookups/prefix queries against the same word set",
+      "Word-search / board problems with a big word list (prune with a trie)"
+    ],
+    complexity: "insert/search <b>O(L)</b> per word (L = length) · Space <b>O(total chars)</b>",
+    template:
+`class Trie {
+  constructor() { this.root = {}; }
+  insert(word) {
+    let node = this.root;
+    for (const ch of word) node = node[ch] ??= {};
+    node.end = true;
+  }
+  _find(word) {
+    let node = this.root;
+    for (const ch of word) { if (!node[ch]) return null; node = node[ch]; }
+    return node;
+  }
+  search(word)      { return !!this._find(word)?.end; }
+  startsWith(pre)   { return !!this._find(pre); }
+}`,
+    example: {
+      problem: "Implement Trie (insert / search / startsWith).",
+      idea: "Each node is a map of next characters; mark word-ends with a flag so 'app' vs 'apple' are distinguishable.",
+      code:
+`const t = new Trie();
+t.insert("apple");
+t.search("apple");     // true
+t.search("app");       // false (no end flag)
+t.startsWith("app");   // true`
+    },
+    pitfalls: [
+      "Forgetting the end-of-word flag → can't distinguish prefixes from full words",
+      "Using an array of 26 when input isn't lowercase a–z (use an object/Map)",
+      "Not reusing the trie to prune DFS in word-search → exponential time"
+    ],
+    problems: [
+      { num: 208, name: "Implement Trie", d: "med" },
+      { num: 211, name: "Add and Search Word", d: "med" },
+      { num: 212, name: "Word Search II", d: "hard" },
+      { num: 14, name: "Longest Common Prefix", d: "easy" },
+      { num: 648, name: "Replace Words", d: "med" }
+    ]
+  },
+  {
+    id: "union-find", name: "Union-Find (DSU)", icon: "🔗", freq: "low", tier: 4,
+    tagline: "Track connected groups with near-constant union & find operations.",
+    explain: "Disjoint Set Union maintains a collection of elements partitioned into groups. find(x) returns x's group representative; union(a,b) merges two groups. With path compression + union by rank, both run in nearly O(1) amortized. It's the cleanest tool for 'are these connected?', counting connected components, and detecting cycles in undirected graphs — especially when edges arrive incrementally.",
+    cues: [
+      "Keywords: <b>'connected components'</b>, <b>'are X and Y connected'</b>, <b>'number of groups/provinces'</b>",
+      "You merge sets dynamically as edges/relations are added",
+      "Cycle detection in an undirected graph, or Kruskal's MST"
+    ],
+    complexity: "find/union ≈ <b>O(α(n))</b> (near constant) · Space <b>O(n)</b>",
+    template:
+`class DSU {
+  constructor(n) { this.p = Array.from({length:n}, (_,i)=>i); this.rank = new Array(n).fill(0); }
+  find(x) {                                  // path compression
+    while (this.p[x] !== x) { this.p[x] = this.p[this.p[x]]; x = this.p[x]; }
+    return x;
+  }
+  union(a, b) {                              // union by rank
+    let ra = this.find(a), rb = this.find(b);
+    if (ra === rb) return false;             // already connected (cycle!)
+    if (this.rank[ra] < this.rank[rb]) [ra, rb] = [rb, ra];
+    this.p[rb] = ra;
+    if (this.rank[ra] === this.rank[rb]) this.rank[ra]++;
+    return true;
+  }
+}`,
+    example: {
+      problem: "Number of Connected Components in an Undirected Graph.",
+      idea: "Start with n separate groups; each edge that successfully unions two different groups reduces the component count by one.",
+      code:
+`function countComponents(n, edges) {
+  const dsu = new DSU(n);
+  let count = n;
+  for (const [a, b] of edges) {
+    if (dsu.union(a, b)) count--;   // merged two groups
+  }
+  return count;
+}`
+    },
+    pitfalls: [
+      "Skipping path compression / union by rank → slow on large inputs",
+      "Off-by-one when nodes are 1-indexed vs 0-indexed",
+      "Using DSU for directed-graph cycle detection (it's for undirected)"
+    ],
+    problems: [
+      { num: 323, name: "Number of Connected Components", d: "med" },
+      { num: 547, name: "Number of Provinces", d: "med" },
+      { num: 200, name: "Number of Islands (DSU variant)", d: "med" },
+      { num: 684, name: "Redundant Connection", d: "med" },
+      { num: 1319, name: "Number of Operations to Make Network Connected", d: "med" }
+    ]
+  },
+  {
+    id: "greedy", name: "Greedy", icon: "🍰", freq: "med", tier: 3,
+    tagline: "Take the locally best choice each step and never look back.",
+    explain: "A greedy algorithm builds the answer by always taking the choice that looks best right now, trusting that local optima compose into a global optimum. It's fast and simple — but only correct when the problem has the 'greedy choice property'. The skill is proving (or sensing) that no future regret is possible; otherwise you need DP. Common in scheduling, jump games, and interval selection.",
+    cues: [
+      "Keywords: <b>'maximum/minimum number of'</b>, <b>'can you reach'</b>, <b>'least/most'</b> with a simple rule",
+      "Sorting + a single pass with a running best gives the answer",
+      "A local rule ('always take the earliest-ending interval') feels obviously optimal"
+    ],
+    complexity: "Time often <b>O(n log n)</b> (sort) or O(n) · Space <b>O(1)</b>",
+    template:
+`function greedy(items) {
+  items.sort(/* by the key that makes local choices safe */);
+  let result = 0, running = initial;
+  for (const item of items) {
+    if (/* item fits the greedy rule */ true) {
+      // take it; update running state
+      result++;
+    }
+  }
+  return result;
+}`,
+    example: {
+      problem: "Jump Game — can you reach the last index, where nums[i] is your max jump length?",
+      idea: "Track the farthest index reachable so far; if you ever stand beyond it you're stuck. Greedy because reaching farther is never worse.",
+      code:
+`function canJump(nums) {
+  let farthest = 0;
+  for (let i = 0; i < nums.length; i++) {
+    if (i > farthest) return false;          // can't even get here
+    farthest = Math.max(farthest, i + nums[i]);
+  }
+  return true;
+}`
+    },
+    pitfalls: [
+      "Assuming greedy works when it doesn't — verify with a counterexample or switch to DP",
+      "Sorting by the wrong criterion (start vs end vs ratio)",
+      "Coin Change with arbitrary coins is NOT greedy — it needs DP"
+    ],
+    problems: [
+      { num: 55, name: "Jump Game", d: "med" },
+      { num: 45, name: "Jump Game II", d: "med" },
+      { num: 134, name: "Gas Station", d: "med" },
+      { num: 763, name: "Partition Labels", d: "med" },
+      { num: 121, name: "Best Time to Buy and Sell Stock", d: "easy" }
+    ]
+  },
+  {
+    id: "bit-manipulation", name: "Bit Manipulation", icon: "💡", freq: "low", tier: 4,
+    tagline: "Work directly on binary representations with XOR, AND, shifts.",
+    explain: "Some problems collapse beautifully when you think in bits. XOR cancels pairs (a ^ a = 0), making it perfect for 'find the single unpaired number'. AND with (n-1) clears the lowest set bit, useful for counting bits or power-of-two checks. Bitmasks let you represent a set of up-to-~30 items as one integer — handy in DP over subsets.",
+    cues: [
+      "Keywords: <b>'single number'</b>, <b>'appears once/twice'</b>, <b>'without extra space'</b>, <b>'count bits'</b>",
+      "Power-of-two checks, toggling/setting flags, subset enumeration via masks",
+      "Constraints hint at small set size (n ≤ 20) → bitmask DP"
+    ],
+    complexity: "Time <b>O(n)</b> or O(n · bits) · Space <b>O(1)</b>",
+    template:
+`a ^ b           // XOR: differing bits -> 1 (a ^ a === 0)
+a & b           // AND
+a | b           // OR
+a << k, a >> k  // shift left/right
+n & (n - 1)     // clears the lowest set bit
+n & -n          // isolates the lowest set bit
+(n & 1)         // test least-significant bit (odd/even)
+(mask >> i) & 1 // is element i in the subset?`,
+    example: {
+      problem: "Single Number — every element appears twice except one; find it.",
+      idea: "XOR all numbers: pairs cancel to 0, leaving only the unique value. O(n) time, O(1) space.",
+      code:
+`function singleNumber(nums) {
+  let x = 0;
+  for (const n of nums) x ^= n;
+  return x;
+}`
+    },
+    pitfalls: [
+      "JS bitwise ops coerce to 32-bit signed ints — beware numbers > 2^31",
+      "Right shift >> is signed; use >>> for unsigned/logical shift",
+      "Operator precedence — wrap bit ops in parentheses inside conditions"
+    ],
+    problems: [
+      { num: 136, name: "Single Number", d: "easy" },
+      { num: 191, name: "Number of 1 Bits", d: "easy" },
+      { num: 338, name: "Counting Bits", d: "easy" },
+      { num: 268, name: "Missing Number", d: "easy" },
+      { num: 78, name: "Subsets (bitmask)", d: "med" }
+    ]
+  },
+  {
+    id: "topological-sort", name: "Topological Sort", icon: "🪢", freq: "low", tier: 4,
+    tagline: "Order tasks so every dependency comes before what needs it (DAGs).",
+    explain: "Given a directed acyclic graph of dependencies ('A must come before B'), a topological sort produces a linear order respecting all edges. Two ways: Kahn's algorithm (BFS on nodes with in-degree 0) or DFS post-order. It also detects impossibility — if a cycle exists, no valid order is possible. The signature use is course/task scheduling with prerequisites.",
+    cues: [
+      "Keywords: <b>'prerequisites'</b>, <b>'order of tasks'</b>, <b>'build order'</b>, <b>'must come before'</b>",
+      "Directed graph; you need a valid sequence or to detect a dependency cycle",
+      "Course schedule / compilation order / recipe step ordering"
+    ],
+    complexity: "Time <b>O(V + E)</b> · Space <b>O(V + E)</b>",
+    template:
+`function topoSort(numNodes, edges) {            // edges: [from, to]
+  const adj = Array.from({length: numNodes}, () => []);
+  const indeg = new Array(numNodes).fill(0);
+  for (const [u, v] of edges) { adj[u].push(v); indeg[v]++; }
+
+  const queue = [];
+  for (let i = 0; i < numNodes; i++) if (indeg[i] === 0) queue.push(i);
+
+  const order = [];
+  while (queue.length) {
+    const node = queue.shift();
+    order.push(node);
+    for (const next of adj[node]) if (--indeg[next] === 0) queue.push(next);
+  }
+  return order.length === numNodes ? order : [];  // [] means a cycle exists
+}`,
+    example: {
+      problem: "Course Schedule — can you finish all courses given prerequisite pairs?",
+      idea: "Build the dependency graph and run Kahn's algorithm. If you can process every node, there's no cycle, so it's possible.",
+      code:
+`function canFinish(numCourses, prerequisites) {
+  const order = topoSort(numCourses,
+    prerequisites.map(([a, b]) => [b, a]));   // b is prereq of a
+  return order.length === numCourses;
+}`
+    },
+    pitfalls: [
+      "Building edges in the wrong direction (prereq → course)",
+      "Not handling cycles → you'll report a partial/invalid order",
+      "Forgetting nodes with no edges still belong in the output"
+    ],
+    problems: [
+      { num: 207, name: "Course Schedule", d: "med" },
+      { num: 210, name: "Course Schedule II", d: "med" },
+      { num: 269, name: "Alien Dictionary", d: "hard" },
+      { num: 310, name: "Minimum Height Trees", d: "med" },
+      { num: 1136, name: "Parallel Courses", d: "med" }
+    ]
+  }
+];
+
+/* ============================================================
+   IDENTIFY — decision checklist (ordered, first match wins)
+   ============================================================ */
+const IDENTIFY = [
+  { ask: "Is the input a tree or graph?", then: "Use <b>DFS</b> (explore all / paths / connectivity) or <b>BFS</b> (shortest path / fewest steps / level order). Dependencies with ordering → <b>Topological Sort</b>. Dynamic connectivity / components → <b>Union-Find</b>." },
+  { ask: "Is it a linked list?", then: "<b>Linked List</b> techniques — dummy head, fast/slow pointers, in-place reversal." },
+  { ask: "Does it ask for ALL combinations / permutations / subsets, or solve a constraint puzzle?", then: "<b>Backtracking</b>. (If it only asks to COUNT ways or find an optimum, think <b>DP</b> instead.)" },
+  { ask: "Is the array/string sorted, or is the answer space monotonic?", then: "<b>Binary Search</b> (incl. 'binary search on the answer'). Sorted + pair/triplet target → <b>Two Pointers</b>." },
+  { ask: "Is it about a contiguous subarray/substring — longest/shortest/max/min window?", then: "<b>Sliding Window</b>." },
+  { ask: "Do you need 'top K', 'K closest', 'merge K', or a running median?", then: "<b>Heap / Priority Queue</b>." },
+  { ask: "Are the inputs ranges [start, end] — merge / overlap / schedule?", then: "<b>Intervals</b> (sort first, then sweep)." },
+  { ask: "Matching brackets, parsing, or 'next greater/smaller element'?", then: "<b>Stack</b> (monotonic stack for next-greater)." },
+  { ask: "Lots of prefix / 'starts-with' / dictionary lookups?", then: "<b>Trie</b>." },
+  { ask: "'Number of ways', 'min/max cost', 'can you make/reach' where greedy fails?", then: "<b>Dynamic Programming</b>." },
+  { ask: "Can an obvious local rule (after sorting) give the optimum?", then: "<b>Greedy</b> — but sanity-check with a counterexample." },
+  { ask: "'Single number', count bits, power of two, or small-set subset masks?", then: "<b>Bit Manipulation</b>." },
+  { ask: "Need fast 'have I seen this / count / group by' lookups?", then: "<b>Hash Map / Set</b> — the universal O(n²)→O(n) move; often combined with the patterns above." }
+];
+
+/* ============================================================
+   QUIZ — problem descriptions -> correct pattern id
+   ============================================================ */
+const QUIZ = [
+  { q: "Given a SORTED array, return the indices of the two numbers that add up to a target. Constant extra space.", a: "two-pointers", why: "Sorted + pair-to-target with O(1) space is the textbook converging two-pointers setup." },
+  { q: "Find the length of the longest substring without repeating characters.", a: "sliding-window", why: "'Longest contiguous substring meeting a condition' is the sliding-window signature." },
+  { q: "Given an unsorted array and a target, return indices of two numbers that sum to it.", a: "hash-map", why: "Unsorted + 'has the complement been seen' → store seen values in a hash map for O(n)." },
+  { q: "Find the minimum element in a rotated sorted array in O(log n).", a: "binary-search", why: "Sorted (even rotated) + O(log n) requirement points straight to binary search." },
+  { q: "Count the number of islands (connected groups of land) in a 2D grid.", a: "dfs", why: "Explore every connected cell from each land cell — classic flood-fill DFS." },
+  { q: "Return the minimum number of moves to get from start to target in an unweighted grid.", a: "bfs", why: "'Minimum moves' in an unweighted graph/grid is exactly what BFS computes." },
+  { q: "Generate every possible subset of a set of distinct integers.", a: "backtracking", why: "Enumerating ALL subsets/combos means building candidates and undoing choices — backtracking." },
+  { q: "Count the distinct ways to climb n stairs taking 1 or 2 steps at a time.", a: "dynamic-programming", why: "'Number of ways' built from smaller subproblems (n-1, n-2) is DP." },
+  { q: "Return the kth largest element in an unsorted array efficiently.", a: "heap", why: "'Kth largest' → maintain a min-heap of size k, O(n log k)." },
+  { q: "Merge all overlapping intervals in a list of [start, end] ranges.", a: "intervals", why: "Ranges + 'merge overlaps' → sort by start, then sweep. The intervals pattern." },
+  { q: "Detect whether a singly linked list contains a cycle, using O(1) space.", a: "linked-list", why: "Linked list + cycle + O(1) space = Floyd's fast/slow pointers." },
+  { q: "Determine if a string of brackets ()[]{} is validly matched and nested.", a: "stack", why: "Most-recent-unmatched-opener bookkeeping is a textbook stack problem." },
+  { q: "Implement insert, search, and startsWith for a dictionary of words (autocomplete).", a: "trie", why: "Prefix queries over a word set are what a trie is built for." },
+  { q: "Count the number of connected components as edges are added between nodes.", a: "union-find", why: "Dynamic connectivity / merging groups → Union-Find (DSU)." },
+  { q: "Given jump lengths at each index, decide if you can reach the last index.", a: "greedy", why: "Track the farthest reachable index in one pass — a safe greedy choice." },
+  { q: "Every number appears twice except one; find the single number with O(1) space.", a: "bit-manipulation", why: "XOR cancels pairs, leaving the unique value. Bit manipulation." },
+  { q: "Given course prerequisite pairs, return a valid order to take all courses.", a: "topological-sort", why: "Dependency ordering on a directed graph = topological sort (Kahn's / DFS)." },
+  { q: "Find the longest repeating-character substring you can get by replacing at most k chars.", a: "sliding-window", why: "Contiguous window with a 'at most k changes' constraint → sliding window." },
+  { q: "Return the K points closest to the origin from a list of coordinates.", a: "heap", why: "'K closest' → heap of size k keyed by distance." },
+  { q: "Find the minimum number of coins to make a target amount (arbitrary denominations).", a: "dynamic-programming", why: "Greedy fails for arbitrary coins; min-cost built from subproblems is DP." }
+];
+
+/* ============================================================
+   APP LOGIC
+   ============================================================ */
+const STORAGE_KEY = "lc-patterns-learned-v1";
+function loadLearned() {
+  try { return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]")); }
+  catch { return new Set(); }
+}
+function saveLearned(set) { localStorage.setItem(STORAGE_KEY, JSON.stringify([...set])); }
+let learned = loadLearned();
+
+const patternById = Object.fromEntries(PATTERNS.map(p => [p.id, p]));
+
+/* ---- tiny syntax highlighter (keywords/comments/strings) ---- */
+function escapeHtml(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function highlight(code) {
+  let h = escapeHtml(code);
+  // comments
+  h = h.replace(/(\/\/[^\n]*)/g, '<span class="cm">$1</span>');
+  // strings
+  h = h.replace(/('[^']*'|"[^"]*")/g, '<span class="str">$1</span>');
+  // keywords
+  h = h.replace(/\b(function|return|const|let|var|if|else|while|for|new|class|of|in|true|false|null|this|constructor)\b/g, '<span class="kw">$1</span>');
+  return h;
+}
+
+/* ---- Patterns grid ---- */
+const grid = document.getElementById("patternGrid");
+const freqClass = { high: "freq-high", med: "freq-med", low: "freq-low" };
+const freqLabel = { high: "🔥 High freq", med: "Medium freq", low: "Foundational" };
+let activeFreq = "all";
+
+function renderGrid() {
+  grid.innerHTML = "";
+  PATTERNS.filter(p => activeFreq === "all" || p.freq === activeFreq).forEach(p => {
+    const card = document.createElement("div");
+    card.className = "card" + (learned.has(p.id) ? " learned" : "");
+    card.innerHTML = `
+      <div class="check">✓</div>
+      <div class="icon">${p.icon}</div>
+      <h3>${p.name}</h3>
+      <div class="tagline">${p.tagline}</div>
+      <div class="meta">
+        <span class="pill ${freqClass[p.freq]}">${freqLabel[p.freq]}</span>
+        <span class="pill">Tier ${p.tier}</span>
+      </div>`;
+    card.addEventListener("click", () => openDrawer(p.id));
+    grid.appendChild(card);
+  });
+  updateProgress();
+}
+
+function updateProgress() {
+  const pct = Math.round((learned.size / PATTERNS.length) * 100);
+  document.getElementById("progFill").style.width = pct + "%";
+  document.getElementById("progLabel").textContent =
+    `${learned.size} / ${PATTERNS.length} patterns marked learned (${pct}%)`;
+}
+
+/* ---- Drawer detail ---- */
+const overlay = document.getElementById("overlay");
+const drawer = document.getElementById("drawer");
+const drawerInner = document.getElementById("drawerInner");
+
+function probRow(pr) {
+  const dl = { easy: "easy", med: "med", hard: "hard" }[pr.d];
+  const dtext = { easy: "Easy", med: "Medium", hard: "Hard" }[pr.d];
+  return `<div class="prob-row">
+    <span class="num">#${pr.num}</span>
+    <span class="d ${dl}">${dtext}</span>
+    <a href="https://leetcode.com/problems/?search=${encodeURIComponent(pr.name)}" target="_blank" rel="noopener">${pr.name}</a>
+  </div>`;
+}
+
+function openDrawer(id) {
+  const p = patternById[id];
+  const isLearned = learned.has(id);
+  drawerInner.innerHTML = `
+    <button class="closex" id="closeDrawer">×</button>
+    <div style="font-size:30px">${p.icon}</div>
+    <h2>${p.name}</h2>
+    <div style="color:var(--muted)">${p.tagline}</div>
+    <div style="margin-top:10px">
+      <span class="pill ${freqClass[p.freq]}">${freqLabel[p.freq]}</span>
+      <span class="pill">Tier ${p.tier}</span>
+    </div>
+
+    <div class="section-title">What it is</div>
+    <p>${p.explain}</p>
+
+    <div class="section-title">How to recognize it</div>
+    <ul class="cue-list">${p.cues.map(c => `<li>${c}</li>`).join("")}</ul>
+
+    <div class="section-title">Complexity</div>
+    <div class="complexity">${p.complexity}</div>
+
+    <div class="section-title">Template</div>
+    <pre class="code">${highlight(p.template)}</pre>
+
+    <div class="section-title">Worked example — ${escapeHtml(p.example.problem)}</div>
+    <p style="color:var(--muted)">${p.example.idea}</p>
+    <pre class="code">${highlight(p.example.code)}</pre>
+
+    <div class="section-title">Common pitfalls</div>
+    <ul class="pitfall-list">${p.pitfalls.map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul>
+
+    <div class="section-title">Practice ladder (easy → hard)</div>
+    ${p.problems.map(probRow).join("")}
+
+    <div class="drawer-actions">
+      <button class="btn" id="toggleLearned">${isLearned ? "✓ Marked learned — unmark" : "Mark as learned"}</button>
+      <button class="btn ghost" id="closeDrawer2">Close</button>
+    </div>
+  `;
+  document.getElementById("toggleLearned").addEventListener("click", () => {
+    if (learned.has(id)) learned.delete(id); else learned.add(id);
+    saveLearned(learned);
+    renderGrid();
+    openDrawer(id);
+  });
+  document.getElementById("closeDrawer").addEventListener("click", closeDrawer);
+  document.getElementById("closeDrawer2").addEventListener("click", closeDrawer);
+  overlay.classList.add("open");
+  drawer.classList.add("open");
+}
+function closeDrawer() { overlay.classList.remove("open"); drawer.classList.remove("open"); }
+overlay.addEventListener("click", closeDrawer);
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
+
+/* ---- Identify view ---- */
+const identifyList = document.getElementById("identifyList");
+identifyList.innerHTML = IDENTIFY.map((step, i) => `
+  <div class="id-step">
+    <h4>Step ${i + 1}</h4>
+    <div class="ask">${step.ask}</div>
+    <div class="then">→ ${step.then}</div>
+  </div>`).join("");
+
+/* ---- Study plan view ---- */
+const planList = document.getElementById("planList");
+const tiers = [
+  { t: 1, title: "Tier 1 — Array/String fundamentals", desc: "The bread and butter. Most Easy/Medium problems combine these. Master them first." },
+  { t: 2, title: "Tier 2 — Search & linear structures", desc: "Binary search, traversals, and pointer-based data structures. Opens up most Mediums." },
+  { t: 3, title: "Tier 3 — Search trees & optimization", desc: "Exhaustive search and greedy choices. Where interviews start separating people." },
+  { t: 4, title: "Tier 4 — Specialized tools", desc: "Powerful but narrower. Learn the trigger words so you reach for them at the right moment." }
+];
+planList.innerHTML = tiers.map(tier => {
+  const ps = PATTERNS.filter(p => p.tier === tier.t);
+  return `<div class="id-step">
+    <h4>${tier.title}</h4>
+    <div class="then" style="margin-bottom:10px">${tier.desc}</div>
+    ${ps.map(p => `<div class="prob-row">
+        <span>${p.icon}</span>
+        <a href="#" data-pid="${p.id}" class="plan-link">${p.name}</a>
+        <span class="pill ${freqClass[p.freq]}" style="margin-left:auto">${freqLabel[p.freq]}</span>
+      </div>`).join("")}
+  </div>`;
+}).join("");
+planList.addEventListener("click", e => {
+  const link = e.target.closest(".plan-link");
+  if (link) { e.preventDefault(); openDrawer(link.dataset.pid); }
+});
+
+/* ---- Quiz ---- */
+let quizOrder = [], quizIdx = 0, quizScore = 0, quizAnswered = false;
+// deterministic-ish shuffle (avoids relying on Math.random; varies start order)
+function shuffled(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j = (i*7 + 3) % (i+1);   // simple permutation, varies start order
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function startQuiz() {
+  quizOrder = shuffled(QUIZ);
+  quizIdx = 0; quizScore = 0;
+  document.getElementById("quizTotal").textContent = quizOrder.length;
+  renderQuiz();
+}
+function renderQuiz() {
+  quizAnswered = false;
+  const item = quizOrder[quizIdx];
+  document.getElementById("quizScore").textContent = quizScore;
+  document.getElementById("quizNum").textContent = (quizIdx + 1) + " / " + quizOrder.length;
+  document.getElementById("quizPrompt").textContent = item.q;
+  document.getElementById("quizFeedback").classList.remove("show");
+  document.getElementById("quizNext").style.display = "none";
+
+  // build 4 options: the answer + 3 distractors
+  const wrongPool = PATTERNS.filter(p => p.id !== item.a);
+  const distractors = shuffled(wrongPool).slice(0, 3).map(p => p.id);
+  const opts = shuffled([item.a, ...distractors]);
+
+  const optsEl = document.getElementById("quizOpts");
+  optsEl.innerHTML = "";
+  opts.forEach(pid => {
+    const b = document.createElement("button");
+    b.className = "quiz-opt";
+    b.textContent = patternById[pid].icon + "  " + patternById[pid].name;
+    b.addEventListener("click", () => answerQuiz(pid, b));
+    optsEl.appendChild(b);
+  });
+}
+function answerQuiz(pid, btn) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const item = quizOrder[quizIdx];
+  const correct = pid === item.a;
+  const buttons = document.querySelectorAll(".quiz-opt");
+  buttons.forEach(b => {
+    const name = b.textContent.trim().split(/\s+/).slice(1).join(" ");
+    if (name === patternById[item.a].name) b.classList.add("correct");
+  });
+  if (correct) { quizScore++; }
+  else { btn.classList.add("wrong"); }
+  document.getElementById("quizScore").textContent = quizScore;
+  const fb = document.getElementById("quizFeedback");
+  fb.innerHTML = `${correct ? "✅ <b>Correct!</b>" : "❌ Not quite — it's <b>" + patternById[item.a].name + "</b>."} ${item.why} <a href="#" data-open="${item.a}">Open the pattern →</a>`;
+  fb.classList.add("show");
+  fb.querySelector("[data-open]").addEventListener("click", ev => { ev.preventDefault(); switchView("patterns"); openDrawer(item.a); });
+  const nextBtn = document.getElementById("quizNext");
+  if (quizIdx < quizOrder.length - 1) { nextBtn.style.display = "inline-block"; nextBtn.textContent = "Next question →"; }
+  else { nextBtn.style.display = "inline-block"; nextBtn.textContent = `Finished! ${quizScore}/${quizOrder.length} — restart`; nextBtn.onclick = startQuiz; }
+}
+document.getElementById("quizNext").addEventListener("click", () => {
+  if (quizIdx < quizOrder.length - 1) { quizIdx++; renderQuiz(); }
+});
+document.getElementById("quizRestart").addEventListener("click", startQuiz);
+
+/* ---- Tabs / view switching ---- */
+function switchView(name) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.view === name));
+  document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+  document.getElementById("view-" + name).classList.add("active");
+  if (name === "quiz" && quizOrder.length === 0) startQuiz();
+}
+document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => switchView(t.dataset.view)));
+
+/* ---- Frequency filters ---- */
+document.querySelectorAll("#freqFilters .filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll("#freqFilters .filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    activeFreq = btn.dataset.freq;
+    renderGrid();
+  });
+});
+
+/* ---- Reset progress ---- */
+document.getElementById("resetProg").addEventListener("click", () => {
+  if (confirm("Clear all 'learned' marks?")) { learned = new Set(); saveLearned(learned); renderGrid(); }
+});
+
+/* ---- Init ---- */
+renderGrid();
+</script>
+</body>
+</html>
