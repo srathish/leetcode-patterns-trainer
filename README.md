@@ -4,6 +4,8 @@ An interactive, self-contained study tool for learning the ~16 patterns that cov
 
 **No build step, no dependencies** — it's a single `index.html`. Double-click it, or serve it locally.
 
+![LeetCode Patterns Trainer — the Patterns tab showing cards for Two Pointers, Sliding Window, Binary Search, DFS, BFS and more, each with frequency and tier tags](docs/screenshot.png)
+
 ## Run it
 
 Just open the file:
